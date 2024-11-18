@@ -1,15 +1,28 @@
-#include <SoftwareSerial.h>
+//#include <SoftwareSerial.h>
 
-int rx = 10;
-int tx = 11;
-SoftwareSerial sserial(rx, tx);
+// int rx = 10;
+// int tx = 11;
+//SoftwareSerial sserial(rx, tx);
+#define sserial Serial
 
-const int ARRAY_SIZE = 1000;
+const int ARRAY_SIZE = 300;
 const int INTERVAL = 3000;
 
 // Test arrays
 int array[ARRAY_SIZE];
 int temp[ARRAY_SIZE]; // For merge sort
+
+void pinOutput(int x) {
+  bool d8 = x & (1 << 0);
+  bool d9 = x & (1 << 1);
+  bool d10 = x & (1 << 2);
+  bool d11 = x & (1 << 3);
+
+  digitalWrite(8, d8);
+  digitalWrite(9, d9);
+  digitalWrite(10, d10);
+  digitalWrite(11, d11);
+}
 
 // Function to initialize the array with random values
 void initializeArray() {
@@ -235,87 +248,117 @@ void pancakeSort(int arr[], int size) {
 // Benchmark function
 void runBenchmark() {
     sserial.println("Starting benchmark...");
+    pinOutput(0);
 
     // Bubble Sort
     initializeArray();
+    pinOutput(1);
     sserial.println("Running Bubble Sort...");
     bubbleSort(array, ARRAY_SIZE);
     sserial.println("Sleeping for 10000 ms");
+    pinOutput(0);
     delay(INTERVAL);
+
 
     // Insertion Sort
     initializeArray();
+    pinOutput(2);
     sserial.println("Running Insertion Sort...");
     insertionSort(array, ARRAY_SIZE);
     sserial.println("Sleeping for 10000 ms");
+    pinOutput(0);
     delay(INTERVAL);
 
     // Merge Sort
     initializeArray();
+    pinOutput(3);
     sserial.println("Running Merge Sort...");
     mergeSort(array, 0, ARRAY_SIZE - 1);
     sserial.println("Sleeping for 10000 ms");
+    pinOutput(0);
     delay(INTERVAL);
 
     // Quick Sort
     initializeArray();
+    pinOutput(4);
     sserial.println("Running Quick Sort...");
     quickSort(array, 0, ARRAY_SIZE - 1);
     sserial.println("Sleeping for 10000 ms");
+    pinOutput(0);
     delay(INTERVAL);
 
     // Heap Sort
     initializeArray();
+    pinOutput(5);
     sserial.println("Running Heap Sort...");
     heapSort(array, ARRAY_SIZE);
     sserial.println("Sleeping for 10000 ms");
+    pinOutput(0);
     delay(INTERVAL);
 
     // Gnome Sort
     initializeArray();
+    pinOutput(6);
     sserial.println("Running Gnome Sort...");
     gnomeSort(array, ARRAY_SIZE);
     sserial.println("Sleeping for 10000 ms");
+    pinOutput(0);
     delay(INTERVAL);
 
     // Radix Sort
     initializeArray();
+    pinOutput(7);
     sserial.println("Running Radix Sort...");
     radixSort(array, ARRAY_SIZE);
     sserial.println("Sleeping for 10000 ms");
+    pinOutput(0);
     delay(INTERVAL);
 
     // Shell Sort
     initializeArray();
+    pinOutput(8);
     sserial.println("Running Shell Sort...");
     shellSort(array, ARRAY_SIZE);
     sserial.println("Sleeping for 10000 ms");
+    pinOutput(0);
     delay(INTERVAL);
 
     // Comb Sort
     initializeArray();
+    pinOutput(9);
     sserial.println("Running Comb Sort...");
     combSort(array, ARRAY_SIZE);
     sserial.println("Sleeping for 10000 ms");
+    pinOutput(0);
     delay(INTERVAL);
 
     // Pancake Sort
     initializeArray();
+    pinOutput(10);
     sserial.println("Running Pancake Sort...");
     pancakeSort(array, ARRAY_SIZE);
     sserial.println("Sleeping for 10000 ms");
+    pinOutput(0);
     delay(INTERVAL);
 
     sserial.println("Benchmark complete!");
 }
 
 void setup() {
-    pinMode(rx, INPUT);
-    pinMode(tx, OUTPUT);
+    // pinMode(rx, INPUT);
+    // pinMode(tx, OUTPUT);
+    pinMode(8, OUTPUT);
+    pinMode(9, OUTPUT);
+    pinMode(10, OUTPUT);
+    pinMode(11, OUTPUT);
     sserial.begin(9600);
     // Serial.begin(115200);
-    delay(5000);
-    runBenchmark();
+
+    for (int i = 0; i < 5; i++) {
+      delay(2000);
+      runBenchmark();
+    }
+    pinOutput(15);
 }
 
 void loop() {
