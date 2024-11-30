@@ -1,4 +1,5 @@
 // #include "SoftwareSerial.h"
+#include <Arduino.h>
 #include "chatgpt-sort.h"
 #include "claude-sort.h"
 #include "gemini-sort.h"
