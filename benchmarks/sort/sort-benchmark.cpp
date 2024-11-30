@@ -1,5 +1,6 @@
 //#include <SoftwareSerial.h>
 #include <Arduino.h>
+#include <stdint.h>
 
 // int rx = 10;
 // int tx = 11;
@@ -7,11 +8,13 @@
 #define sserial Serial
 
 const int ARRAY_SIZE = 300;
-const int INTERVAL = 3000;
+const int INTERVAL = 1000;
+
+#define arr_t uint16_t
 
 // Test arrays
-int array[ARRAY_SIZE];
-int temp[ARRAY_SIZE]; // For merge sort
+arr_t array[ARRAY_SIZE];
+arr_t temp[ARRAY_SIZE]; // For merge sort
 
 void pinOutput(int x) {
   bool d8 = x & (1 << 0);
@@ -41,11 +44,11 @@ void initializeArray() {
 }
 
 // Bubble Sort
-void bubbleSort(int arr[], int size) {
+void bubbleSort(arr_t arr[], int size) {
     for (int i = 0; i < size - 1; i++) {
         for (int j = 0; j < size - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
-            int temp = arr[j];
+            arr_t temp = arr[j];
             arr[j] = arr[j + 1];
             arr[j + 1] = temp;
       }
@@ -54,20 +57,20 @@ void bubbleSort(int arr[], int size) {
 }
 
 // Insertion Sort
-void insertionSort(int arr[], int size) {
+void insertionSort(arr_t arr[], int size) {
     for (int i = 1; i < size; i++) {
-        int key = arr[i];
+        arr_t key = arr[i];
         int j = i - 1;
         while (j >= 0 && arr[j] > key) {
-        arr[j + 1] = arr[j];
-        j--;
+          arr[j + 1] = arr[j];
+          j--;
         }
         arr[j + 1] = key;
     }
 }
 
 // Merge Sort
-void merge(int arr[], int left, int mid, int right) {
+void merge(arr_t arr[], int left, int mid, int right) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
 
@@ -78,9 +81,9 @@ void merge(int arr[], int left, int mid, int right) {
     int i = 0, j = 0, k = left;
     while (i < n1 && j < n2) {
         if (temp[i] <= temp[n1 + j]) {
-        arr[k++] = temp[i++];
+          arr[k++] = temp[i++];
         } else {
-        arr[k++] = temp[n1 + j++];
+          arr[k++] = temp[n1 + j++];
         }
     }
 
@@ -88,7 +91,7 @@ void merge(int arr[], int left, int mid, int right) {
     while (j < n2) arr[k++] = temp[n1 + j++];
 }
 
-void mergeSort(int arr[], int left, int right) {
+void mergeSort(arr_t arr[], int left, int right) {
     if (left < right) {
         int mid = left + (right - left) / 2;
         mergeSort(arr, left, mid);
@@ -98,24 +101,24 @@ void mergeSort(int arr[], int left, int right) {
 }
 
 // Quick Sort
-int partition(int arr[], int low, int high) {
-    int pivot = arr[high];
+int partition(arr_t arr[], int low, int high) {
+    arr_t pivot = arr[high];
     int i = low - 1;
     for (int j = low; j < high; j++) {
         if (arr[j] < pivot) {
         i++;
-        int temp = arr[i];
+        arr_t temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
         }
     }
-    int temp = arr[i + 1];
+    arr_t temp = arr[i + 1];
     arr[i + 1] = arr[high];
     arr[high] = temp;
     return i + 1;
 }
 
-void quickSort(int arr[], int low, int high) {
+void quickSort(arr_t arr[], int low, int high) {
     if (low < high) {
         int pi = partition(arr, low, high);
         quickSort(arr, low, pi - 1);
@@ -124,7 +127,7 @@ void quickSort(int arr[], int low, int high) {
 }
 
 // Heap Sort
-void heapify(int arr[], int size, int root) {
+void heapify(arr_t arr[], int size, int root) {
     int largest = root;
     int left = 2 * root + 1;
     int right = 2 * root + 2;
@@ -133,17 +136,17 @@ void heapify(int arr[], int size, int root) {
     if (right < size && arr[right] > arr[largest]) largest = right;
 
     if (largest != root) {
-        int temp = arr[root];
+        arr_t temp = arr[root];
         arr[root] = arr[largest];
         arr[largest] = temp;
         heapify(arr, size, largest);
     }
 }
 
-void heapSort(int arr[], int size) {
+void heapSort(arr_t arr[], int size) {
     for (int i = size / 2 - 1; i >= 0; i--) heapify(arr, size, i);
     for (int i = size - 1; i > 0; i--) {
-        int temp = arr[0];
+        arr_t temp = arr[0];
         arr[0] = arr[i];
         arr[i] = temp;
         heapify(arr, i, 0);
@@ -151,13 +154,13 @@ void heapSort(int arr[], int size) {
 }
 
 // Gnome Sort
-void gnomeSort(int arr[], int size) {
+void gnomeSort(arr_t arr[], int size) {
     int index = 0;
     while (index < size) {
         if (index == 0 || arr[index] >= arr[index - 1]) {
             index++;
         } else {
-            int temp = arr[index];
+            arr_t temp = arr[index];
             arr[index] = arr[index - 1];
             arr[index - 1] = temp;
             index--;
@@ -166,8 +169,8 @@ void gnomeSort(int arr[], int size) {
 }
 
 // Radix Sort
-void countSortForRadix(int arr[], int size, int exp) {
-    int output[size];
+void countSortForRadix(arr_t arr[], int size, int exp) {
+    arr_t output[size];
     int count[10] = {0};
 
     for (int i = 0; i < size; i++) count[(arr[i] / exp) % 10]++;
@@ -179,17 +182,17 @@ void countSortForRadix(int arr[], int size, int exp) {
     for (int i = 0; i < size; i++) arr[i] = output[i];
 }
 
-void radixSort(int arr[], int size) {
-    int max = arr[0];
+void radixSort(arr_t arr[], int size) {
+    arr_t max = arr[0];
     for (int i = 1; i < size; i++) if (arr[i] > max) max = arr[i];
     for (int exp = 1; max / exp > 0; exp *= 10) countSortForRadix(arr, size, exp);
 }
 
 // Shell Sort
-void shellSort(int arr[], int size) {
+void shellSort(arr_t arr[], int size) {
     for (int gap = size / 2; gap > 0; gap /= 2) {
         for (int i = gap; i < size; i++) {
-            int temp = arr[i];
+            arr_t temp = arr[i];
             int j;
             for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
                 arr[j] = arr[j - gap];
@@ -200,7 +203,7 @@ void shellSort(int arr[], int size) {
 }
 
 // Comb Sort
-void combSort(int arr[], int size) {
+void combSort(arr_t arr[], int size) {
     int gap = size;
     bool swapped = true;
     while (gap != 1 || swapped) {
@@ -209,7 +212,7 @@ void combSort(int arr[], int size) {
         swapped = false;
         for (int i = 0; i < size - gap; i++) {
             if (arr[i] > arr[i + gap]) {
-                int temp = arr[i];
+                arr_t temp = arr[i];
                 arr[i] = arr[i + gap];
                 arr[i + gap] = temp;
                 swapped = true;
@@ -219,7 +222,7 @@ void combSort(int arr[], int size) {
 }
 
 // Pancake Sort
-int findMax(int arr[], int size) {
+int findMax(arr_t arr[], int size) {
     int maxIdx = 0;
     for (int i = 1; i < size; i++) {
         if (arr[i] > arr[maxIdx]) maxIdx = i;
@@ -227,15 +230,15 @@ int findMax(int arr[], int size) {
     return maxIdx;
 }
 
-void flip(int arr[], int size) {
+void flip(arr_t arr[], int size) {
     for (int i = 0; i < size / 2; i++) {
-        int temp = arr[i];
+        arr_t temp = arr[i];
         arr[i] = arr[size - i - 1];
         arr[size - i - 1] = temp;
     }
 }
 
-void pancakeSort(int arr[], int size) {
+void pancakeSort(arr_t arr[], int size) {
     for (int currSize = size; currSize > 1; currSize--) {
         int maxIdx = findMax(arr, currSize);
         if (maxIdx != currSize - 1) {
@@ -256,7 +259,7 @@ void runBenchmark() {
     pinOutput(1);
     sserial.println("Running Bubble Sort...");
     bubbleSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 10000 ms");
+    sserial.println("Sleeping for 1000 ms");
     pinOutput(0);
     delay(INTERVAL);
 
@@ -266,7 +269,7 @@ void runBenchmark() {
     pinOutput(2);
     sserial.println("Running Insertion Sort...");
     insertionSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 10000 ms");
+    sserial.println("Sleeping for 1000 ms");
     pinOutput(0);
     delay(INTERVAL);
 
@@ -275,7 +278,7 @@ void runBenchmark() {
     pinOutput(3);
     sserial.println("Running Merge Sort...");
     mergeSort(array, 0, ARRAY_SIZE - 1);
-    sserial.println("Sleeping for 10000 ms");
+    sserial.println("Sleeping for 1000 ms");
     pinOutput(0);
     delay(INTERVAL);
 
@@ -284,7 +287,7 @@ void runBenchmark() {
     pinOutput(4);
     sserial.println("Running Quick Sort...");
     quickSort(array, 0, ARRAY_SIZE - 1);
-    sserial.println("Sleeping for 10000 ms");
+    sserial.println("Sleeping for 1000 ms");
     pinOutput(0);
     delay(INTERVAL);
 
@@ -293,7 +296,7 @@ void runBenchmark() {
     pinOutput(5);
     sserial.println("Running Heap Sort...");
     heapSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 10000 ms");
+    sserial.println("Sleeping for 1000 ms");
     pinOutput(0);
     delay(INTERVAL);
 
@@ -302,7 +305,7 @@ void runBenchmark() {
     pinOutput(6);
     sserial.println("Running Gnome Sort...");
     gnomeSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 10000 ms");
+    sserial.println("Sleeping for 1000 ms");
     pinOutput(0);
     delay(INTERVAL);
 
@@ -311,7 +314,7 @@ void runBenchmark() {
     pinOutput(7);
     sserial.println("Running Radix Sort...");
     radixSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 10000 ms");
+    sserial.println("Sleeping for 1000 ms");
     pinOutput(0);
     delay(INTERVAL);
 
@@ -320,7 +323,7 @@ void runBenchmark() {
     pinOutput(8);
     sserial.println("Running Shell Sort...");
     shellSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 10000 ms");
+    sserial.println("Sleeping for 1000 ms");
     pinOutput(0);
     delay(INTERVAL);
 
@@ -329,7 +332,7 @@ void runBenchmark() {
     pinOutput(9);
     sserial.println("Running Comb Sort...");
     combSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 10000 ms");
+    sserial.println("Sleeping for 1000 ms");
     pinOutput(0);
     delay(INTERVAL);
 
@@ -338,7 +341,7 @@ void runBenchmark() {
     pinOutput(10);
     sserial.println("Running Pancake Sort...");
     pancakeSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 10000 ms");
+    sserial.println("Sleeping for 1000 ms");
     pinOutput(0);
     delay(INTERVAL);
 
@@ -360,6 +363,8 @@ void setup() {
       runBenchmark();
     }
     pinOutput(15);
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, HIGH);
 }
 
 void loop() {
