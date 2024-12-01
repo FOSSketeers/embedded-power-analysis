@@ -183,11 +183,7 @@ void runBenchmark() {
         chachapoly.setKey(key256, std::size(key256));
         chachapoly.setIV(iv, std::size(iv));
         chachapoly.encrypt(enc_buffer, message, std::size(message));
-
-        ChaChaPoly chachapolyt;
-        chachapolyt.setKey(key256, std::size(key256));
-        chachapolyt.setIV(iv, std::size(iv));
-        chachapolyt.computeTag(tag_buffer, std::size(tag_buffer));
+        chachapoly.computeTag(tag_buffer, std::size(tag_buffer));
         
         ChaChaPoly chachapolyd;
         chachapolyd.setKey(key256, std::size(key256));
@@ -199,7 +195,7 @@ void runBenchmark() {
                 Serial.println("ERROR: ChaCha20Poly1305 encryption failed correctness test!");
             }
 
-            if (!chachapoly.checkTag(tag_buffer, std::size(tag_buffer))) {
+            if (!chachapolyd.checkTag(tag_buffer, std::size(tag_buffer))) {
                 Serial.println("ERROR: ChaCha20Poly1305 tag failed correctness test!");
             }
         }
@@ -216,11 +212,7 @@ void runBenchmark() {
         gcm.setKey(key128, std::size(key128));
         gcm.setIV(iv, std::size(iv));
         gcm.encrypt(enc_buffer, message, std::size(message));
-
-        GCM<AES128> gcmt;
-        gcmt.setKey(key128, std::size(key128));
-        gcmt.setIV(iv, std::size(iv));
-        gcmt.computeTag(tag_buffer, std::size(tag_buffer));
+        gcm.computeTag(tag_buffer, std::size(tag_buffer));
 
         GCM<AES128> gcmd;
         gcmd.setKey(key128, std::size(key128));
@@ -232,7 +224,7 @@ void runBenchmark() {
                 Serial.println("ERROR: AES128-GCM encryption failed correctness test!");
             }
 
-            if (!gcm.checkTag(tag_buffer, std::size(tag_buffer))) {
+            if (!gcmd.checkTag(tag_buffer, std::size(tag_buffer))) {
                 Serial.println("ERROR: AES128-GCM tag failed correctness test!");
             }
         }
@@ -247,11 +239,7 @@ void runBenchmark() {
         gcm.setKey(key192, std::size(key192));
         gcm.setIV(iv, std::size(iv));
         gcm.encrypt(enc_buffer, message, std::size(message));
-
-        GCM<AES192> gcmt;
-        gcmt.setKey(key192, std::size(key192));
-        gcmt.setIV(iv, std::size(iv));
-        gcmt.computeTag(tag_buffer, std::size(tag_buffer));
+        gcm.computeTag(tag_buffer, std::size(tag_buffer));
 
         GCM<AES192> gcmd;
         gcmd.setKey(key192, std::size(key192));
@@ -263,7 +251,7 @@ void runBenchmark() {
                 Serial.println("ERROR: AES192-GCM encryption failed correctness test!");
             }
 
-            if (!gcm.checkTag(tag_buffer, std::size(tag_buffer))) {
+            if (!gcmd.checkTag(tag_buffer, std::size(tag_buffer))) {
                 Serial.println("ERROR: AES192-GCM tag failed correctness test!");
             }
         }
@@ -278,11 +266,7 @@ void runBenchmark() {
         gcm.setKey(key256, std::size(key256));
         gcm.setIV(iv, std::size(iv));
         gcm.encrypt(enc_buffer, message, std::size(message));
-
-        GCM<AES128> gcmt;
-        gcmt.setKey(key256, std::size(key256));
-        gcmt.setIV(iv, std::size(iv));
-        gcmt.computeTag(tag_buffer, std::size(tag_buffer));
+        gcm.computeTag(tag_buffer, std::size(tag_buffer));
 
         GCM<AES128> gcmd;
         gcmd.setKey(key256, std::size(key256));
@@ -294,7 +278,7 @@ void runBenchmark() {
                 Serial.println("ERROR: AES256-GCM encryption failed correctness test!");
             }
 
-            if (!gcm.checkTag(tag_buffer, std::size(tag_buffer))) {
+            if (!gcmd.checkTag(tag_buffer, std::size(tag_buffer))) {
                 Serial.println("ERROR: AES256-GCM tag failed correctness test!");
             }
         }
@@ -311,11 +295,7 @@ void runBenchmark() {
         acorn128.setKey(key128, std::size(key128));
         acorn128.setIV(iv, std::size(iv));
         acorn128.encrypt(enc_buffer, message, std::size(message));
-
-        Acorn128 acorn128t;
-        acorn128t.setKey(key128, std::size(key128));
-        acorn128t.setIV(iv, std::size(iv));
-        acorn128t.computeTag(tag_buffer, std::size(tag_buffer));
+        acorn128.computeTag(tag_buffer, std::size(tag_buffer));
 
         Acorn128 acorn128d;
         acorn128d.setKey(key128, std::size(key128));
@@ -327,7 +307,7 @@ void runBenchmark() {
                 Serial.println("ERROR: Acorn128 encryption failed correctness test!");
             }
 
-            if (!acorn128.checkTag(tag_buffer, std::size(tag_buffer))) {
+            if (!acorn128d.checkTag(tag_buffer, std::size(tag_buffer))) {
                 Serial.println("ERROR: Acorn128 tag failed correctness test!");
             }
         }
@@ -344,11 +324,7 @@ void runBenchmark() {
         ascon128.setKey(key128, std::size(key128));
         ascon128.setIV(iv, std::size(iv));
         ascon128.encrypt(enc_buffer, message, std::size(message));
-
-        Ascon128 ascon128t;
-        ascon128t.setKey(key128, std::size(key128));
-        ascon128t.setIV(iv, std::size(iv));
-        ascon128t.computeTag(tag_buffer, std::size(tag_buffer));
+        ascon128.computeTag(tag_buffer, std::size(tag_buffer));
 
         Ascon128 ascon128d;
         ascon128d.setKey(key128, std::size(key128));
@@ -360,7 +336,7 @@ void runBenchmark() {
                 Serial.println("ERROR: Ascon128 encryption failed correctness test!");
             }
 
-            if (!ascon128.checkTag(tag_buffer, std::size(tag_buffer))) {
+            if (!ascon128d.checkTag(tag_buffer, std::size(tag_buffer))) {
                 Serial.println("ERROR: Ascon128 tag failed correctness test!");
             }
         }
