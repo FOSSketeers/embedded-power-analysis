@@ -51,7 +51,11 @@ void runBenchmark() {
         chacha8.setKey(key128, std::size(key128));
         chacha8.setIV(iv, std::size(iv));
         chacha8.encrypt(enc_buffer, message, std::size(message));
-        chacha8.decrypt(dec_buffer, enc_buffer, std::size(message));
+
+        ChaCha chacha8d(8);
+        chacha8d.setKey(key128, std::size(key128));
+        chacha8d.setIV(iv, std::size(iv));
+        chacha8d.decrypt(dec_buffer, enc_buffer, std::size(message));
 
         if constexpr (CHECK_CORRECTNESS) {
             if (!std::equal(std::begin(dec_buffer), std::end(dec_buffer), std::begin(message))) {
@@ -69,7 +73,11 @@ void runBenchmark() {
         chacha12.setKey(key128, std::size(key128));
         chacha12.setIV(iv, std::size(iv));
         chacha12.encrypt(enc_buffer, message, std::size(message));
-        chacha12.decrypt(dec_buffer, enc_buffer, std::size(message));
+
+        ChaCha chacha12d(12);
+        chacha12d.setKey(key128, std::size(key128));
+        chacha12d.setIV(iv, std::size(iv));
+        chacha12d.decrypt(dec_buffer, enc_buffer, std::size(message));
 
         if constexpr (CHECK_CORRECTNESS) {
             if (!std::equal(std::begin(dec_buffer), std::end(dec_buffer), std::begin(message))) {
@@ -87,7 +95,11 @@ void runBenchmark() {
         chacha20.setKey(key256, std::size(key256));
         chacha20.setIV(iv, std::size(iv));
         chacha20.encrypt(enc_buffer, message, std::size(message));
-        chacha20.decrypt(dec_buffer, enc_buffer, std::size(message));
+
+        ChaCha chacha20d(20);
+        chacha20d.setKey(key256, std::size(key256));
+        chacha20d.setIV(iv, std::size(iv));
+        chacha20d.decrypt(dec_buffer, enc_buffer, std::size(message));
 
         if constexpr (CHECK_CORRECTNESS) {
             if (!std::equal(std::begin(dec_buffer), std::end(dec_buffer), std::begin(message))) {
@@ -106,7 +118,10 @@ void runBenchmark() {
         AES128 aes128;
         aes128.setKey(key128, std::size(key128));
         aes128.encryptBlock(enc_buffer, message);
-        aes128.decryptBlock(dec_buffer, enc_buffer);
+
+        AES128 aes128d;
+        aes128d.setKey(key128, std::size(key128));
+        aes128d.decryptBlock(dec_buffer, enc_buffer);
 
         if constexpr (CHECK_CORRECTNESS) {
             if (!std::equal(std::begin(dec_buffer), std::end(dec_buffer), std::begin(message))) {
@@ -123,7 +138,10 @@ void runBenchmark() {
         AES192 aes192;
         aes192.setKey(key192, std::size(key192));
         aes192.encryptBlock(enc_buffer, message);
-        aes192.decryptBlock(dec_buffer, enc_buffer);
+
+        AES192 aes192d;
+        aes192d.setKey(key192, std::size(key192));
+        aes192d.decryptBlock(dec_buffer, enc_buffer);
 
         if constexpr (CHECK_CORRECTNESS) {
             if (!std::equal(std::begin(dec_buffer), std::end(dec_buffer), std::begin(message))) {
@@ -140,7 +158,10 @@ void runBenchmark() {
         AES256 aes256;
         aes256.setKey(key256, std::size(key256));
         aes256.encryptBlock(enc_buffer, message);
-        aes256.decryptBlock(dec_buffer, enc_buffer);
+
+        AES256 aes256d;
+        aes256d.setKey(key256, std::size(key256));
+        aes256d.decryptBlock(dec_buffer, enc_buffer);
 
         if constexpr (CHECK_CORRECTNESS) {
             if (!std::equal(std::begin(dec_buffer), std::end(dec_buffer), std::begin(message))) {
@@ -162,8 +183,16 @@ void runBenchmark() {
         chachapoly.setKey(key256, std::size(key256));
         chachapoly.setIV(iv, std::size(iv));
         chachapoly.encrypt(enc_buffer, message, std::size(message));
-        chachapoly.computeTag(tag_buffer, std::size(tag_buffer));
-        chachapoly.decrypt(dec_buffer, enc_buffer, std::size(message));
+
+        ChaChaPoly chachapolyt;
+        chachapolyt.setKey(key256, std::size(key256));
+        chachapolyt.setIV(iv, std::size(iv));
+        chachapolyt.computeTag(tag_buffer, std::size(tag_buffer));
+        
+        ChaChaPoly chachapolyd;
+        chachapolyd.setKey(key256, std::size(key256));
+        chachapolyd.setIV(iv, std::size(iv));
+        chachapolyd.decrypt(dec_buffer, enc_buffer, std::size(message));
 
         if constexpr (CHECK_CORRECTNESS) {
             if (!std::equal(std::begin(dec_buffer), std::end(dec_buffer), std::begin(message))) {
@@ -187,8 +216,16 @@ void runBenchmark() {
         gcm.setKey(key128, std::size(key128));
         gcm.setIV(iv, std::size(iv));
         gcm.encrypt(enc_buffer, message, std::size(message));
-        gcm.computeTag(tag_buffer, std::size(tag_buffer));
-        gcm.decrypt(dec_buffer, enc_buffer, std::size(message));
+
+        GCM<AES128> gcmt;
+        gcmt.setKey(key128, std::size(key128));
+        gcmt.setIV(iv, std::size(iv));
+        gcmt.computeTag(tag_buffer, std::size(tag_buffer));
+
+        GCM<AES128> gcmd;
+        gcmd.setKey(key128, std::size(key128));
+        gcmd.setIV(iv, std::size(iv));
+        gcmd.decrypt(dec_buffer, enc_buffer, std::size(message));
 
         if constexpr (CHECK_CORRECTNESS) {
             if (!std::equal(std::begin(dec_buffer), std::end(dec_buffer), std::begin(message))) {
@@ -210,8 +247,16 @@ void runBenchmark() {
         gcm.setKey(key192, std::size(key192));
         gcm.setIV(iv, std::size(iv));
         gcm.encrypt(enc_buffer, message, std::size(message));
-        gcm.computeTag(tag_buffer, std::size(tag_buffer));
-        gcm.decrypt(dec_buffer, enc_buffer, std::size(message));
+
+        GCM<AES192> gcmt;
+        gcmt.setKey(key192, std::size(key192));
+        gcmt.setIV(iv, std::size(iv));
+        gcmt.computeTag(tag_buffer, std::size(tag_buffer));
+
+        GCM<AES192> gcmd;
+        gcmd.setKey(key192, std::size(key192));
+        gcmd.setIV(iv, std::size(iv));
+        gcmd.decrypt(dec_buffer, enc_buffer, std::size(message));
 
         if constexpr (CHECK_CORRECTNESS) {
             if (!std::equal(std::begin(dec_buffer), std::end(dec_buffer), std::begin(message))) {
@@ -233,8 +278,16 @@ void runBenchmark() {
         gcm.setKey(key256, std::size(key256));
         gcm.setIV(iv, std::size(iv));
         gcm.encrypt(enc_buffer, message, std::size(message));
-        gcm.computeTag(tag_buffer, std::size(tag_buffer));
-        gcm.decrypt(dec_buffer, enc_buffer, std::size(message));
+
+        GCM<AES128> gcmt;
+        gcmt.setKey(key256, std::size(key256));
+        gcmt.setIV(iv, std::size(iv));
+        gcmt.computeTag(tag_buffer, std::size(tag_buffer));
+
+        GCM<AES128> gcmd;
+        gcmd.setKey(key256, std::size(key256));
+        gcmd.setIV(iv, std::size(iv));
+        gcmd.decrypt(dec_buffer, enc_buffer, std::size(message));
 
         if constexpr (CHECK_CORRECTNESS) {
             if (!std::equal(std::begin(dec_buffer), std::end(dec_buffer), std::begin(message))) {
@@ -258,8 +311,16 @@ void runBenchmark() {
         acorn128.setKey(key128, std::size(key128));
         acorn128.setIV(iv, std::size(iv));
         acorn128.encrypt(enc_buffer, message, std::size(message));
-        acorn128.computeTag(tag_buffer, std::size(tag_buffer));
-        acorn128.decrypt(dec_buffer, enc_buffer, std::size(message));
+
+        Acorn128 acorn128t;
+        acorn128t.setKey(key128, std::size(key128));
+        acorn128t.setIV(iv, std::size(iv));
+        acorn128t.computeTag(tag_buffer, std::size(tag_buffer));
+
+        Acorn128 acorn128d;
+        acorn128d.setKey(key128, std::size(key128));
+        acorn128d.setIV(iv, std::size(iv));
+        acorn128d.decrypt(dec_buffer, enc_buffer, std::size(message));
 
         if constexpr (CHECK_CORRECTNESS) {
             if (!std::equal(std::begin(dec_buffer), std::end(dec_buffer), std::begin(message))) {
@@ -283,8 +344,16 @@ void runBenchmark() {
         ascon128.setKey(key128, std::size(key128));
         ascon128.setIV(iv, std::size(iv));
         ascon128.encrypt(enc_buffer, message, std::size(message));
-        ascon128.computeTag(tag_buffer, std::size(tag_buffer));
-        ascon128.decrypt(dec_buffer, enc_buffer, std::size(message));
+
+        Ascon128 ascon128t;
+        ascon128t.setKey(key128, std::size(key128));
+        ascon128t.setIV(iv, std::size(iv));
+        ascon128t.computeTag(tag_buffer, std::size(tag_buffer));
+
+        Ascon128 ascon128d;
+        ascon128d.setKey(key128, std::size(key128));
+        ascon128d.setIV(iv, std::size(iv));
+        ascon128d.decrypt(dec_buffer, enc_buffer, std::size(message));
 
         if constexpr (CHECK_CORRECTNESS) {
             if (!std::equal(std::begin(dec_buffer), std::end(dec_buffer), std::begin(message))) {
