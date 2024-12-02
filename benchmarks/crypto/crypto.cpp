@@ -14,7 +14,6 @@ const bool CHECK_CORRECTNESS = false;
 static_assert(!CHECK_CORRECTNESS || SERIAL_OUTPUT, "Correctness check is meaningless without serial output.");
 const int EXPERIMENT_REPETITION = 1;
 const int EXPERIMENT_DELAY = 2000;
-const int END_DELAY = 2000;
 const int ALGORITHM_DELAY = 1500;
 
 const uint8_t message[32] = "Lorem ipsum dolor sit amet, con"; // -1 for NUL terminator
@@ -341,8 +340,6 @@ void setup() {
         delay(EXPERIMENT_DELAY);
         runBenchmark();
     }
-
-    delay(END_DELAY);
 }
 
 void loop() {
