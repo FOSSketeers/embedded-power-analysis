@@ -8,8 +8,9 @@
 #define SERIAL_OUTPUT 0
 #endif
 
-class Initializer {
-    Initializer() {
+class _CommonInitializer {
+public:
+    _CommonInitializer() {
 #if SERIAL_OUTPUT
         Serial.begin(9600);
 #endif
@@ -35,7 +36,7 @@ class Initializer {
 #endif
         delay(500);
     }
-} init;
+} _common_init;
 
 #if defined(__AVR_ATmega328P__) 
 
