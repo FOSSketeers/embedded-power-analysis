@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-COLS: dict[str, str] = {"Timestamp(ms)": np.float32, "Current(uA)": np.float64, "D0-D7": np.uint8}
+COLS: dict[str, type] = {"Timestamp(ms)": np.float32, "Current(uA)": np.float64, "D0-D7": np.uint8}
 # TODO: Auto state discovery - We can put macros on C side and grep them?
 STATES: dict[int, str] = {0: "Other", 15: "Done", 1: "Bubble Sort", 2: "Insertion Sort", 3: "Merge Sort", 4: "Quick Sort", 5: "Heap Sort", 6: "Gnome Sort", 7: "Radix Sort", 8: "Shell Sort", 9: "Comb Sort", 10: "Pancake Sort"}
 
@@ -24,10 +24,10 @@ def benchmark(title: str):
 
 
 def load_data(file: str) -> pd.DataFrame:
-    return pd.read_csv(file, usecols=COLS.keys(), dtype=COLS, converters={"D0-D7": lambda s: np.uint8(int(s[::-1], 2))})
+    return pd.read_csv(file, usecols=COLS.keys(), dtype=COLS, converters={"D0-D7": lambda s: np.uint8(int(s[::-1], 2))}) # type: ignore
 
 
-def process_data(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def process_data(data: pd.DataFrame) -> tuple[pd.Series, pd.Series, pd.Series]:
     # Skip 0 and 240 for now
     level_group = data.loc[~data["D0-D7"].isin((0, 15))].groupby("D0-D7")
     # We're supplying 5V, every data point is for 0.01ms(10^-5). Current is micro(10^-6)amps. Turning uA -> A, ms -> h, end result -> Wh.
@@ -44,7 +44,7 @@ def process_data(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.Dat
 
 def main() -> None:
     datas: list[pd.DataFrame] = []
-    processed_datas: list[tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]] = []
+    processed_datas: list[tuple[pd.Series, pd.Series, pd.Series]] = []
 
     with ThreadPoolExecutor() as executor:
         with benchmark("Load CSV"):
