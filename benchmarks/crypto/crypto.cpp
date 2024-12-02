@@ -340,6 +340,8 @@ void setup() {
         delay(EXPERIMENT_DELAY);
         runBenchmark();
     }
+
+    setState(255, "finish");
 }
 
 void loop() {
