@@ -1,14 +1,11 @@
 // #include "SoftwareSerial.h"
 #include <Arduino.h>
+
+#include <util.h>
+
 #include "chatgpt-sort.h"
 #include "claude-sort.h"
 #include "gemini-sort.h"
-
-// const int rx = 10;
-// const int tx = 11;
-// SoftwareSerial sserial(rx, tx);
-#define sserial Serial
-
 
 const int EXPERIMENT_REPETITION = 1;
 const int EXPERIMENT_DELAY = 2000;
@@ -20,20 +17,6 @@ int arr[100] = { -107, -105, -261, 278, -14, -59, 267, -7, 82, -209, 133, 189, 9
 int arr_length = sizeof(arr) / sizeof(arr[0]);
 int arr_copy[100];
 
-void pinOutput(int x) {
-    bool d8 = x & (1 << 0);
-    bool d9 = x & (1 << 1);
-    bool d10 = x & (1 << 2);
-    bool d11 = x & (1 << 3);
-    bool d12 = x & (1 << 4);
-
-    digitalWrite(8, d8);
-    digitalWrite(9, d9);
-    digitalWrite(10, d10);
-    digitalWrite(11, d11);
-    digitalWrite(12, d12);
-}
-
 void initializeArray() {
     for (int i = 0; i < arr_length; i++) {
         arr_copy[i] = arr[i];
@@ -43,7 +26,7 @@ void initializeArray() {
 bool verifySorting(int arr[]) {
     for (int i = 0; i < arr_length - 1; i++) {
         if (arr[i] > arr[i + 1]) {
-            sserial.println("VERIF_FAIL: Array is not sorted!");
+            if constexpr (SERIAL_OUTPUT) Serial.println("VERIF_FAIL: Array is not sorted!");
             return false;
         }
     }
@@ -51,308 +34,301 @@ bool verifySorting(int arr[]) {
 }
 
 void runBenchmark() {
-    sserial.println("Starting benchmark...");
-    pinOutput(0);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Starting benchmark...");
+    setState(0, "idle");
 
-    sserial.println("-------------------");
-    sserial.println("----- ChatGPT -----");
-    sserial.println("-------------------");
+    if constexpr (SERIAL_OUTPUT) Serial.println("-------------------");
+    if constexpr (SERIAL_OUTPUT) Serial.println("----- ChatGPT -----");
+    if constexpr (SERIAL_OUTPUT) Serial.println("-------------------");
 
     initializeArray();
-    sserial.println("Running Bubble Sort...");
-    pinOutput(1);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Bubble Sort...");
+    setState(1, "chatpt_bubblesort");
     ChatGPT::bubbleSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Insertion Sort...");
-    pinOutput(2);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Insertion Sort...");
+    setState(2, "chatgpt_insertionsort");
     ChatGPT::insertionSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Merge Sort...");
-    pinOutput(3);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Merge Sort...");
+    setState(3, "chatgpt_mergesort");
     ChatGPT::mergeSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Quick Sort...");
-    pinOutput(4);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Quick Sort...");
+    setState(4, "chatgpt_quicksort");
     ChatGPT::quickSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Heap Sort...");
-    pinOutput(5);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Heap Sort...");
+    setState(5, "chatgpt_heapsort");
     ChatGPT::heapSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Gnome Sort...");
-    pinOutput(6);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Gnome Sort...");
+    setState(6, "chatgpt_gnomesort");
     ChatGPT::gnomeSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Radix Sort...");
-    pinOutput(7);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Radix Sort...");
+    setState(7, "chatgpt_radixsort");
     ChatGPT::radixSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Shell Sort...");
-    pinOutput(8);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Shell Sort...");
+    setState(8, "chatgpt_shellsort");
     ChatGPT::shellSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Comb Sort...");
-    pinOutput(9);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Comb Sort...");
+    setState(9, "chatgpt_combsort");
     ChatGPT::combSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Pancake Sort...");
-    pinOutput(10);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Pancake Sort...");
+    setState(10, "chatgpt_pancakesort");
     ChatGPT::pancakeSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
-    sserial.println("-------------------");
-    sserial.println("------ Gemini -----");
-    sserial.println("-------------------");
+    if constexpr (SERIAL_OUTPUT) Serial.println("-------------------");
+    if constexpr (SERIAL_OUTPUT) Serial.println("------ Gemini -----");
+    if constexpr (SERIAL_OUTPUT) Serial.println("-------------------");
 
     initializeArray();
-    sserial.println("Running Bubble Sort...");
-    pinOutput(11);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Bubble Sort...");
+    setState(11, "gemini_bubblesort");
     Gemini::bubbleSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Insertion Sort...");
-    pinOutput(12);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Insertion Sort...");
+    setState(12, "gemini_insertionsort");
     Gemini::insertionSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Merge Sort...");
-    pinOutput(13);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Merge Sort...");
+    setState(13, "gemini_mergesort");
     Gemini::mergeSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Quick Sort...");
-    pinOutput(14);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Quick Sort...");
+    setState(14, "gemini_quicksort");
     Gemini::quickSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Heap Sort...");
-    pinOutput(15);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Heap Sort...");
+    setState(15, "gemini_heapsort");
     Gemini::heapSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Gnome Sort...");
-    pinOutput(16);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Gnome Sort...");
+    setState(16, "gemini_gnomesort");
     Gemini::gnomeSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Radix Sort...");
-    pinOutput(17);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Radix Sort...");
+    setState(17, "gemini_radixsort");
     Gemini::radixSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Shell Sort...");
-    pinOutput(18);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Shell Sort...");
+    setState(18, "gemini_shellsort");
     Gemini::shellSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Comb Sort...");
-    pinOutput(19);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Comb Sort...");
+    setState(19, "gemini_combsort");
     Gemini::combSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Pancake Sort...");
-    pinOutput(20);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Pancake Sort...");
+    setState(20, "gemini_pancakesort");
     Gemini::pancakeSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
-    sserial.println("-------------------");
-    sserial.println("------ Claude -----");
-    sserial.println("-------------------");
+    if constexpr (SERIAL_OUTPUT) Serial.println("-------------------");
+    if constexpr (SERIAL_OUTPUT) Serial.println("------ Claude -----");
+    if constexpr (SERIAL_OUTPUT) Serial.println("-------------------");
 
     initializeArray();
-    sserial.println("Running Bubble Sort...");
-    pinOutput(21);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Bubble Sort...");
+    setState(21, "claude_bubblesort");
     Claude::bubbleSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Insertion Sort...");
-    pinOutput(22);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Insertion Sort...");
+    setState(22, "claude_insertionsort");
     Claude::insertionSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Merge Sort...");
-    pinOutput(23);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Merge Sort...");
+    setState(23, "claude_mergesort");
     Claude::mergeSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Quick Sort...");
-    pinOutput(24);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Quick Sort...");
+    setState(24, "claude_quicksort");
     Claude::quickSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Heap Sort...");
-    pinOutput(25);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Heap Sort...");
+    setState(25, "claude_heapsort");
     Claude::heapSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Gnome Sort...");
-    pinOutput(26);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Gnome Sort...");
+    setState(26, "claude_gnomesor");
     Claude::gnomeSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Radix Sort...");
-    pinOutput(27);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Radix Sort...");
+    setState(27, "claude_radixsort");
     Claude::radixSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Shell Sort...");
-    pinOutput(28);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Shell Sort...");
+    setState(28, "claude_shellsort");
     Claude::shellSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Comb Sort...");
-    pinOutput(29);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Comb Sort...");
+    setState(29, "claude_combsort");
     Claude::combSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
     initializeArray();
-    sserial.println("Running Pancake Sort...");
-    pinOutput(30);
+    if constexpr (SERIAL_OUTPUT) Serial.println("Running Pancake Sort...");
+    setState(30, "claude_pancakesort");
     Claude::pancakeSort(arr_copy, arr_length);
-    pinOutput(0);
+    setState(0, "idle");
     if (SORT_VERIFICATION) verifySorting(arr_copy);
-    sserial.println("Going to sleep...");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Going to sleep...");
     delay(ALGORITHM_DELAY);
 
-    sserial.println("Benchmark complete!");
+    if constexpr (SERIAL_OUTPUT) Serial.println("Benchmark complete!");
 }
 
 void setup() {
-    pinMode(8, OUTPUT);
-    pinMode(9, OUTPUT);
-    pinMode(10, OUTPUT);
-    pinMode(11, OUTPUT);
-    pinMode(12, OUTPUT);
-    sserial.begin(9600);
-
     for (int i = 0; i < EXPERIMENT_REPETITION; i++) {
         delay(EXPERIMENT_DELAY);
         runBenchmark();
     }
 
-    pinOutput(31);
+    setState(255, "finish");
 }
 
 void loop() {
