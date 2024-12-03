@@ -8,35 +8,32 @@
 #define SERIAL_OUTPUT 0
 #endif
 
-class _CommonInitializer {
-  public:
-    _CommonInitializer() {
+void _CommonInitializer() {
 #if SERIAL_OUTPUT
-        Serial.begin(9600);
+    Serial.begin(9600);
 #endif
 
-#if defined(__AVR_ATmega328P__)
-        pinMode(0, OUTPUT);
-        pinMode(1, OUTPUT);
-        pinMode(2, OUTPUT);
-        pinMode(3, OUTPUT);
-        pinMode(4, OUTPUT);
-        pinMode(5, OUTPUT);
-        pinMode(6, OUTPUT);
-        pinMode(7, OUTPUT);
-#else
-        pinMode(2, OUTPUT);
-        pinMode(3, OUTPUT);
-        pinMode(4, OUTPUT);
-        pinMode(5, OUTPUT);
-        pinMode(6, OUTPUT);
-        pinMode(7, OUTPUT);
-        pinMode(18, OUTPUT);
-        pinMode(19, OUTPUT);
+#if defined(__AVR_ATmega328P__)  // Arduino Uno R3
+    pinMode(0, OUTPUT);
+    pinMode(1, OUTPUT);
+    pinMode(2, OUTPUT);
+    pinMode(3, OUTPUT);
+    pinMode(4, OUTPUT);
+    pinMode(5, OUTPUT);
+    pinMode(6, OUTPUT);
+    pinMode(7, OUTPUT);
+#else  // Arduino Uno R4 Minima
+    pinMode(2, OUTPUT);
+    pinMode(3, OUTPUT);
+    pinMode(4, OUTPUT);
+    pinMode(5, OUTPUT);
+    pinMode(6, OUTPUT);
+    pinMode(7, OUTPUT);
+    pinMode(18, OUTPUT);
+    pinMode(19, OUTPUT);
 #endif
-        delay(500);
-    }
-} _common_init;
+    delay(500);
+}
 
 #if defined(__AVR_ATmega328P__)
 
@@ -85,6 +82,13 @@ template< class T, size_t N >
 T* end(T (&array)[N]) {
     return array + N;
 }
+}
+
+int main() {
+    init();
+    _CommonInitializer();
+    setup();
+    while (1) loop();
 }
 
 #endif  // _UTIL_UTIL_H
