@@ -14,15 +14,15 @@ void _CommonInitializer() {
 #endif
 
 #if defined(__AVR_ATmega328P__)  // Arduino Uno R3
-    pinMode(0, OUTPUT);
-    pinMode(1, OUTPUT);
-    pinMode(2, OUTPUT);
+    pinMode(2, OUTPUT);          // PD2
     pinMode(3, OUTPUT);
     pinMode(4, OUTPUT);
     pinMode(5, OUTPUT);
     pinMode(6, OUTPUT);
     pinMode(7, OUTPUT);
-#else  // Arduino Uno R4 Minima
+    pinMode(8, OUTPUT);  // PB0
+    pinMode(9, OUTPUT);  // PB1
+#else                    // Arduino Uno R4 Minima
     pinMode(2, OUTPUT);
     pinMode(3, OUTPUT);
     pinMode(4, OUTPUT);
@@ -41,7 +41,8 @@ void _CommonInitializer() {
     do { \
         static_assert(num < 256); \
         if constexpr (SERIAL_OUTPUT) Serial.println("Running stage " name); \
-        else PORTD = num; \
+        PORTD = (num << 2); \
+        PORTB = (num >> 6) & 0x03; \
     } while (0)
 
 #else
