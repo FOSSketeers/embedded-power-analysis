@@ -157,7 +157,7 @@ void ChatGPT::gnomeSort(int arr[], int n) {
 
 // 7. Radix Sort
 static void countSort(int arr[], int n, int exp) {
-    int output[n], count[10] = {0};
+    int output[n], count[10] = { 0 };
 
     for (int i = 0; i < n; i++) count[(arr[i] / exp) % 10]++;
     for (int i = 1; i < 10; i++) count[i] += count[i - 1];
@@ -176,7 +176,8 @@ static void countSort(int arr[], int n, int exp) {
  */
 void ChatGPT::radixSort(int arr[], int n) {
     int max = arr[0];
-    for (int i = 1; i < n; i++) if (arr[i] > max) max = arr[i];
+    for (int i = 1; i < n; i++)
+        if (arr[i] > max) max = arr[i];
 
     for (int exp = 1; max / exp > 0; exp *= 10) countSort(arr, n, exp);
 }

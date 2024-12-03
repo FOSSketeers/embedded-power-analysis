@@ -14,25 +14,25 @@ const int INTERVAL = 1000;
 
 // Test arrays
 arr_t array[ARRAY_SIZE];
-arr_t temp[ARRAY_SIZE]; // For merge sort
+arr_t temp[ARRAY_SIZE];  // For merge sort
 
 void pinOutput(int x) {
-  bool d8 = x & (1 << 0);
-  bool d9 = x & (1 << 1);
-  bool d10 = x & (1 << 2);
-  bool d11 = x & (1 << 3);
+    bool d8 = x & (1 << 0);
+    bool d9 = x & (1 << 1);
+    bool d10 = x & (1 << 2);
+    bool d11 = x & (1 << 3);
 
-  digitalWrite(8, d8);
-  digitalWrite(9, d9);
-  digitalWrite(10, d10);
-  digitalWrite(11, d11);
+    digitalWrite(8, d8);
+    digitalWrite(9, d9);
+    digitalWrite(10, d10);
+    digitalWrite(11, d11);
 }
 
 // Function to initialize the array with random values
 void initializeArray() {
     unsigned int r = random(1, 10000);
     for (int i = 0; i < ARRAY_SIZE; i++) {
-        array[i] = r & 1023; // Random numbers between 0 and 9999
+        array[i] = r & 1023;  // Random numbers between 0 and 9999
         r *= 31;
         r += 79;
         r >>= 3;
@@ -48,12 +48,12 @@ void bubbleSort(arr_t arr[], int size) {
     for (int i = 0; i < size - 1; i++) {
         for (int j = 0; j < size - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
-            arr_t temp = arr[j];
-            arr[j] = arr[j + 1];
-            arr[j + 1] = temp;
-      }
+                arr_t temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
     }
-  }
 }
 
 // Insertion Sort
@@ -62,8 +62,8 @@ void insertionSort(arr_t arr[], int size) {
         arr_t key = arr[i];
         int j = i - 1;
         while (j >= 0 && arr[j] > key) {
-          arr[j + 1] = arr[j];
-          j--;
+            arr[j + 1] = arr[j];
+            j--;
         }
         arr[j + 1] = key;
     }
@@ -81,9 +81,9 @@ void merge(arr_t arr[], int left, int mid, int right) {
     int i = 0, j = 0, k = left;
     while (i < n1 && j < n2) {
         if (temp[i] <= temp[n1 + j]) {
-          arr[k++] = temp[i++];
+            arr[k++] = temp[i++];
         } else {
-          arr[k++] = temp[n1 + j++];
+            arr[k++] = temp[n1 + j++];
         }
     }
 
@@ -106,10 +106,10 @@ int partition(arr_t arr[], int low, int high) {
     int i = low - 1;
     for (int j = low; j < high; j++) {
         if (arr[j] < pivot) {
-        i++;
-        arr_t temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
+            i++;
+            arr_t temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
         }
     }
     arr_t temp = arr[i + 1];
@@ -171,7 +171,7 @@ void gnomeSort(arr_t arr[], int size) {
 // Radix Sort
 void countSortForRadix(arr_t arr[], int size, int exp) {
     arr_t output[size];
-    int count[10] = {0};
+    int count[10] = { 0 };
 
     for (int i = 0; i < size; i++) count[(arr[i] / exp) % 10]++;
     for (int i = 1; i < 10; i++) count[i] += count[i - 1];
@@ -184,7 +184,8 @@ void countSortForRadix(arr_t arr[], int size, int exp) {
 
 void radixSort(arr_t arr[], int size) {
     arr_t max = arr[0];
-    for (int i = 1; i < size; i++) if (arr[i] > max) max = arr[i];
+    for (int i = 1; i < size; i++)
+        if (arr[i] > max) max = arr[i];
     for (int exp = 1; max / exp > 0; exp *= 10) countSortForRadix(arr, size, exp);
 }
 
@@ -359,8 +360,8 @@ void setup() {
     // Serial.begin(115200);
 
     for (int i = 0; i < 5; i++) {
-      delay(2000);
-      runBenchmark();
+        delay(2000);
+        runBenchmark();
     }
     pinOutput(15);
     pinMode(LED_BUILTIN, OUTPUT);
@@ -368,5 +369,5 @@ void setup() {
 }
 
 void loop() {
-  // Do nothing
+    // Do nothing
 }
