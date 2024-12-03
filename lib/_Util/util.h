@@ -84,14 +84,4 @@ T* end(T (&array)[N]) {
 }
 }
 
-int main() {
-#ifdef __AVR_ATmega328P__
-    // Apparently, Uno R4 doesn't have this init function defined anywhere
-    init();
-#endif
-    _CommonInitializer();
-    setup();
-    while (1) loop();
-}
-
 #endif  // _UTIL_UTIL_H
