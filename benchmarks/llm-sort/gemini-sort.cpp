@@ -2,7 +2,7 @@
 
 // 1. Bubble Sort
 
-void Gemini::bubbleSort(int arr[], int n) {
+void Gemini::bubbleSort(arr_t arr[], int n) {
     // Sorts an array of integers using bubble sort.
     // Input: An integer array 'arr' of size 'n'.
     // Output: The sorted array 'arr'.
@@ -11,7 +11,7 @@ void Gemini::bubbleSort(int arr[], int n) {
         for (int j = 0; j < n - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
                 // Swap arr[j] and arr[j+1]
-                int temp = arr[j];
+                arr_t temp = arr[j];
                 arr[j] = arr[j + 1];
                 arr[j + 1] = temp;
             }
@@ -21,13 +21,13 @@ void Gemini::bubbleSort(int arr[], int n) {
 
 // 2. Insertion Sort
 
-void Gemini::insertionSort(int arr[], int n) {
+void Gemini::insertionSort(arr_t arr[], int n) {
     // Sorts an array of integers using insertion sort.
     // Input: An integer array 'arr' of size 'n'.
     // Output: The sorted array 'arr'.
 
     for (int i = 1; i < n; i++) {
-        int key = arr[i];
+        arr_t key = arr[i];
         int j = i - 1;
 
         /* Move elements of arr[0..i-1], that are
@@ -43,7 +43,7 @@ void Gemini::insertionSort(int arr[], int n) {
 
 // 3. Merge Sort
 
-static void merge(int arr[], int left, int mid, int right) {
+static void merge(arr_t arr[], int left, int mid, int right) {
     // Merges two subarrays of arr[].
     // First subarray is arr[left..mid]
     // Second subarray is arr[mid+1..right]
@@ -51,7 +51,7 @@ static void merge(int arr[], int left, int mid, int right) {
     int n2 = right - mid;
 
     // Create temporary arrays
-    int L[n1], R[n2];
+    arr_t L[n1], R[n2];
 
     // Copy data to temporary arrays L[] and R[]
     for (int i = 0; i < n1; i++)
@@ -87,7 +87,7 @@ static void merge(int arr[], int left, int mid, int right) {
     }
 }
 
-static void mergeSortHelper(int arr[], int left, int right) {
+static void mergeSortHelper(arr_t arr[], int left, int right) {
     if (left < right) {
         // Find the middle point
         int mid = left + (right - left) / 2;
@@ -101,7 +101,7 @@ static void mergeSortHelper(int arr[], int left, int right) {
     }
 }
 
-void Gemini::mergeSort(int arr[], int n) {
+void Gemini::mergeSort(arr_t arr[], int n) {
     // Sorts an array of integers using the Merge Sort algorithm.
     // Input: An integer array `arr` and its size `n`.
     // Output: The sorted array in ascending order.
@@ -111,18 +111,18 @@ void Gemini::mergeSort(int arr[], int n) {
 
 // 4. Quick Sort
 
-static void swap(int* a, int* b) {
-    int t = *a;
+static void swap(arr_t* a, arr_t* b) {
+    arr_t t = *a;
     *a = *b;
     *b = t;
 }
 
-static int partition(int arr[], int low, int high) {
+static int partition(arr_t arr[], int low, int high) {
     // Partition the array around a pivot element.
     // Input: An integer array `arr`, low index `low`, and high index `high`.
     // Output: The index of the pivot element after partitioning.
 
-    int pivot = arr[high];
+    arr_t pivot = arr[high];
     int i = (low - 1);
 
     for (int j = low; j < high; j++) {
@@ -136,7 +136,7 @@ static int partition(int arr[], int low, int high) {
     return (i + 1);
 }
 
-static void quickSortHelper(int arr[], int low, int high) {
+static void quickSortHelper(arr_t arr[], int low, int high) {
     if (low < high) {
         // Partition the array and get the pivot index
         int pi = partition(arr, low, high);
@@ -147,7 +147,7 @@ static void quickSortHelper(int arr[], int low, int high) {
     }
 }
 
-void Gemini::quickSort(int arr[], int n) {
+void Gemini::quickSort(arr_t arr[], int n) {
     // Sorts an array of integers using the Quick Sort algorithm.
     // Input: An integer array `arr` and its size `n`.
     // Output: The sorted array in ascending order.
@@ -157,7 +157,7 @@ void Gemini::quickSort(int arr[], int n) {
 
 // 5. Heap Sort
 
-static void heapify(int arr[], int n, int i) {
+static void heapify(arr_t arr[], int n, int i) {
     // Heapify subtree rooted at index i.
     // Input: An integer array `arr`, its size `n`, and the root index `i`.
     // Output: The heapified subtree.
@@ -183,7 +183,7 @@ static void heapify(int arr[], int n, int i) {
     }
 }
 
-void Gemini::heapSort(int arr[], int n) {
+void Gemini::heapSort(arr_t arr[], int n) {
     // Sorts an array of integers using the Heap Sort algorithm.
     // Input: An integer array `arr` and its size `n`.
     // Output: The sorted array in ascending order.
@@ -204,7 +204,7 @@ void Gemini::heapSort(int arr[], int n) {
 
 // 6. Gnome Sort
 
-void Gemini::gnomeSort(int arr[], int n) {
+void Gemini::gnomeSort(arr_t arr[], int n) {
     // Sorts an array of integers using the Gnome Sort algorithm.
     // Input: An integer array `arr` and its size `n`.
     // Output: The sorted array in ascending order.
@@ -222,9 +222,9 @@ void Gemini::gnomeSort(int arr[], int n) {
 
 // 7. Radix Sort
 
-static void countSort(int arr[], int n, int exp) {
-    int output[n];  // output array
-    int count[10] = { 0 };
+static void countSort(arr_t arr[], int n, int exp) {
+    arr_t output[n];  // output array
+    arr_t count[10] = { 0 };
 
     // Store count of occurrences in count[]
     for (int i = 0; i < n; i++) {
@@ -249,10 +249,10 @@ static void countSort(int arr[], int n, int exp) {
         arr[i] = output[i];
 }
 
-void Gemini::radixSort(int arr[], int n) {
+void Gemini::radixSort(arr_t arr[], int n) {
     // Find the maximum and minimum values to determine the maximum number of digits
-    int max = arr[0];
-    int min = arr[0];
+    arr_t max = arr[0];
+    arr_t min = arr[0];
     for (int i = 1; i < n; i++) {
         max = (arr[i] > max) ? arr[i] : max;
         min = (arr[i] < min) ? arr[i] : min;
@@ -277,14 +277,14 @@ void Gemini::radixSort(int arr[], int n) {
 
 // 8. Shell Sort
 
-void Gemini::shellSort(int arr[], int n) {
+void Gemini::shellSort(arr_t arr[], int n) {
     // Sorts an array of integers using the Shell Sort algorithm.
     // Input: An integer array `arr` and its size `n`.
     // Output: The sorted array in ascending order.
 
     for (int gap = n / 2; gap > 0; gap /= 2) {
         for (int i = gap; i < n; i += 1) {
-            int temp = arr[i];
+            arr_t temp = arr[i];
             int j;
             for (j = i; j >= gap && arr[j - gap] > temp; j -= gap)
                 arr[j] = arr[j - gap];
@@ -302,7 +302,7 @@ static int getNextGap(int gap) {
     return gap;
 }
 
-void Gemini::combSort(int arr[], int n) {
+void Gemini::combSort(arr_t arr[], int n) {
     // Sorts an array of integers using the Comb Sort algorithm.
     // Input: An integer array `arr` and its size `n`.
     // Output: The sorted array in ascending order.
@@ -325,9 +325,9 @@ void Gemini::combSort(int arr[], int n) {
 
 // 10. Pancake Sort
 
-static void flip(int arr[], int i) {
+static void flip(arr_t arr[], int i) {
     // Reverse array from 0 to i
-    int temp, start = 0;
+    arr_t temp, start = 0;
     while (start < i) {
         temp = arr[start];
         arr[start] = arr[i];
@@ -337,7 +337,7 @@ static void flip(int arr[], int i) {
     }
 }
 
-void Gemini::pancakeSort(int arr[], int n) {
+void Gemini::pancakeSort(arr_t arr[], int n) {
     // Sorts an array of integers using the Pancake Sort algorithm.
     // Input: An integer array `arr` and its size `n`.
     // Output: The sorted array in ascending order.

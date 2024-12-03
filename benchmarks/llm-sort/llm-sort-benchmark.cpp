@@ -1,8 +1,9 @@
-// #include "SoftwareSerial.h"
 #include <Arduino.h>
 
 #include <util.h>
 
+// Change the array type in arr_t.h
+#include "arr_t.h"
 #include "chatgpt-sort.h"
 #include "claude-sort.h"
 #include "gemini-sort.h"
@@ -13,9 +14,9 @@ const int ALGORITHM_DELAY = 1500;
 const bool SORT_VERIFICATION = false;
 
 // Taken from random_array_generator.py
-int arr[100] = { -107, -105, -261, 278, -14, -59, 267, -7, 82, -209, 133, 189, 93, -53, 57, 79, 133, 30, 125, -299, 250, 265, 198, -57, -262, -216, 27, -286, -17, -207, 34, -136, 252, 23, -97, 201, 260, -197, 259, 81, -133, 208, 169, 81, 211, 138, 21, 161, 223, -53, -227, 300, -252, 277, 27, 34, 67, -29, 296, -247, -203, -116, -217, 6, 273, 90, -178, 226, -172, 82, 220, 122, 119, -134, 268, -188, -213, 257, 220, -154, 89, -241, 65, -254, -56, 225, -230, -34, 205, -162, 154, 148, 208, -287, 8, 134, 280, 39, 293, 131 };
+arr_t arr[100] = { -107, -105, -261, 278, -14, -59, 267, -7, 82, -209, 133, 189, 93, -53, 57, 79, 133, 30, 125, -299, 250, 265, 198, -57, -262, -216, 27, -286, -17, -207, 34, -136, 252, 23, -97, 201, 260, -197, 259, 81, -133, 208, 169, 81, 211, 138, 21, 161, 223, -53, -227, 300, -252, 277, 27, 34, 67, -29, 296, -247, -203, -116, -217, 6, 273, 90, -178, 226, -172, 82, 220, 122, 119, -134, 268, -188, -213, 257, 220, -154, 89, -241, 65, -254, -56, 225, -230, -34, 205, -162, 154, 148, 208, -287, 8, 134, 280, 39, 293, 131 };
 int arr_length = sizeof(arr) / sizeof(arr[0]);
-int arr_copy[100];
+arr_t arr_copy[100];
 
 void initializeArray() {
     for (int i = 0; i < arr_length; i++) {
@@ -23,7 +24,7 @@ void initializeArray() {
     }
 }
 
-bool verifySorting(int arr[]) {
+bool verifySorting(arr_t arr[]) {
     for (int i = 0; i < arr_length - 1; i++) {
         if (arr[i] > arr[i + 1]) {
             if constexpr (SERIAL_OUTPUT)

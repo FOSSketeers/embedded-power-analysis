@@ -8,7 +8,7 @@
  * @param arr[] Array of integers to be sorted.
  * @param n Size of the array.
  */
-void ChatGPT::bubbleSort(int arr[], int n) {
+void ChatGPT::bubbleSort(arr_t arr[], int n) {
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
@@ -28,9 +28,9 @@ void ChatGPT::bubbleSort(int arr[], int n) {
  * @param arr[] Array of integers to be sorted.
  * @param n Size of the array.
  */
-void ChatGPT::insertionSort(int arr[], int n) {
+void ChatGPT::insertionSort(arr_t arr[], int n) {
     for (int i = 1; i < n; i++) {
-        int key = arr[i];
+        arr_t key = arr[i];
         int j = i - 1;
         while (j >= 0 && arr[j] > key) {
             arr[j + 1] = arr[j];
@@ -48,11 +48,11 @@ void ChatGPT::insertionSort(int arr[], int n) {
  * @param arr[] Array of integers to be sorted.
  * @param n Size of the array.
  */
-void ChatGPT::mergeSort(int arr[], int n) {
+void ChatGPT::mergeSort(arr_t arr[], int n) {
     if (n < 2) return;
 
     int mid = n / 2;
-    int left[mid], right[n - mid];
+    arr_t left[mid], right[n - mid];
 
     for (int i = 0; i < mid; i++) left[i] = arr[i];
     for (int i = mid; i < n; i++) right[i - mid] = arr[i];
@@ -77,9 +77,9 @@ void ChatGPT::mergeSort(int arr[], int n) {
  * @param arr[] Array of integers to be sorted.
  * @param n Size of the array.
  */
-static void quickSortHelper(int arr[], int low, int high) {
+static void quickSortHelper(arr_t arr[], int low, int high) {
     if (low < high) {
-        int pivot = arr[high], i = low - 1;
+        arr_t pivot = arr[high], i = low - 1;
         for (int j = low; j < high; j++) {
             if (arr[j] < pivot) {
                 i++;
@@ -88,7 +88,7 @@ static void quickSortHelper(int arr[], int low, int high) {
                 arr[j] = temp;
             }
         }
-        int temp = arr[i + 1];
+        arr_t temp = arr[i + 1];
         arr[i + 1] = arr[high];
         arr[high] = temp;
 
@@ -98,20 +98,20 @@ static void quickSortHelper(int arr[], int low, int high) {
     }
 }
 
-void ChatGPT::quickSort(int arr[], int n) {
+void ChatGPT::quickSort(arr_t arr[], int n) {
     quickSortHelper(arr, 0, n - 1);
 }
 
 // 5. Heap Sort
 
-static void heapify(int arr[], int n, int i) {
+static void heapify(arr_t arr[], int n, int i) {
     int largest = i, left = 2 * i + 1, right = 2 * i + 2;
 
     if (left < n && arr[left] > arr[largest]) largest = left;
     if (right < n && arr[right] > arr[largest]) largest = right;
 
     if (largest != i) {
-        int temp = arr[i];
+        arr_t temp = arr[i];
         arr[i] = arr[largest];
         arr[largest] = temp;
         heapify(arr, n, largest);
@@ -124,10 +124,10 @@ static void heapify(int arr[], int n, int i) {
  * @param arr[] Array of integers to be sorted.
  * @param n Size of the array.
  */
-void ChatGPT::heapSort(int arr[], int n) {
+void ChatGPT::heapSort(arr_t arr[], int n) {
     for (int i = n / 2 - 1; i >= 0; i--) heapify(arr, n, i);
     for (int i = n - 1; i > 0; i--) {
-        int temp = arr[0];
+        arr_t temp = arr[0];
         arr[0] = arr[i];
         arr[i] = temp;
         heapify(arr, i, 0);
@@ -142,12 +142,12 @@ void ChatGPT::heapSort(int arr[], int n) {
  * @param arr[] Array of integers to be sorted.
  * @param n Size of the array.
  */
-void ChatGPT::gnomeSort(int arr[], int n) {
+void ChatGPT::gnomeSort(arr_t arr[], int n) {
     int i = 0;
     while (i < n) {
         if (i == 0 || arr[i] >= arr[i - 1]) i++;
         else {
-            int temp = arr[i];
+            arr_t temp = arr[i];
             arr[i] = arr[i - 1];
             arr[i - 1] = temp;
             i--;
@@ -156,8 +156,8 @@ void ChatGPT::gnomeSort(int arr[], int n) {
 }
 
 // 7. Radix Sort
-static void countSort(int arr[], int n, int exp) {
-    int output[n], count[10] = { 0 };
+static void countSort(arr_t arr[], int n, int exp) {
+    arr_t output[n], count[10] = { 0 };
 
     for (int i = 0; i < n; i++) count[(arr[i] / exp) % 10]++;
     for (int i = 1; i < 10; i++) count[i] += count[i - 1];
@@ -169,8 +169,8 @@ static void countSort(int arr[], int n, int exp) {
 }
 
 
-static void _radixSort(int arr[], int n) {
-    int max = arr[0];
+static void _radixSort(arr_t arr[], int n) {
+    arr_t max = arr[0];
     for (int i = 1; i < n; i++)
         if (arr[i] > max) max = arr[i];
 
@@ -183,9 +183,9 @@ static void _radixSort(int arr[], int n) {
  * @param arr[] Array of integers to be sorted.
  * @param n Size of the array.
  */
-void ChatGPT::radixSort(int arr[], int n) {
+void ChatGPT::radixSort(arr_t arr[], int n) {
     // Separate negative and positive numbers
-    int negatives[n], positives[n];
+    arr_t negatives[n], positives[n];
     int negCount = 0, posCount = 0;
 
     for (int i = 0; i < n; i++) {
@@ -211,10 +211,10 @@ void ChatGPT::radixSort(int arr[], int n) {
  * @param arr[] Array of integers to be sorted.
  * @param n Size of the array.
  */
-void ChatGPT::shellSort(int arr[], int n) {
+void ChatGPT::shellSort(arr_t arr[], int n) {
     for (int gap = n / 2; gap > 0; gap /= 2) {
         for (int i = gap; i < n; i++) {
-            int temp = arr[i], j;
+            arr_t temp = arr[i], j;
             for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
                 arr[j] = arr[j - gap];
             }
@@ -231,7 +231,7 @@ void ChatGPT::shellSort(int arr[], int n) {
  * @param arr[] Array of integers to be sorted.
  * @param n Size of the array.
  */
-void ChatGPT::combSort(int arr[], int n) {
+void ChatGPT::combSort(arr_t arr[], int n) {
     int gap = n;
     bool swapped = true;
 
@@ -241,7 +241,7 @@ void ChatGPT::combSort(int arr[], int n) {
         swapped = false;
         for (int i = 0; i + gap < n; i++) {
             if (arr[i] > arr[i + gap]) {
-                int temp = arr[i];
+                arr_t temp = arr[i];
                 arr[i] = arr[i + gap];
                 arr[i + gap] = temp;
                 swapped = true;
@@ -252,9 +252,9 @@ void ChatGPT::combSort(int arr[], int n) {
 
 // 10. Pancake Sort
 
-static void flip(int arr[], int n) {
+static void flip(arr_t arr[], int n) {
     for (int i = 0, j = n - 1; i < j; i++, j--) {
-        int temp = arr[i];
+        arr_t temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
     }
@@ -266,7 +266,7 @@ static void flip(int arr[], int n) {
  * @param arr[] Array of integers to be sorted.
  * @param n Size of the array.
  */
-void ChatGPT::pancakeSort(int arr[], int n) {
+void ChatGPT::pancakeSort(arr_t arr[], int n) {
     for (int i = n; i > 1; i--) {
         int maxIdx = 0;
         for (int j = 1; j < i; j++) {

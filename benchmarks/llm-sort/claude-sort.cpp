@@ -9,7 +9,7 @@
  * @note Time complexity: O(n^2), Space complexity: O(1)
  * @note Stable sorting algorithm that repeatedly steps through the list
  */
-void Claude::bubbleSort(int arr[], int n) {
+void Claude::bubbleSort(arr_t arr[], int n) {
     for (int i = 0; i < n - 1; i++) {
         bool swapped = false;
         for (int j = 0; j < n - i - 1; j++) {
@@ -35,9 +35,9 @@ void Claude::bubbleSort(int arr[], int n) {
  * @note Time complexity: O(n^2), Space complexity: O(1)
  * @note Efficient for small arrays or nearly sorted arrays
  */
-void Claude::insertionSort(int arr[], int n) {
+void Claude::insertionSort(arr_t arr[], int n) {
     for (int i = 1; i < n; i++) {
-        int key = arr[i];
+        arr_t key = arr[i];
         int j = i - 1;
 
         // Move elements that are greater than key
@@ -58,13 +58,13 @@ void Claude::insertionSort(int arr[], int n) {
  * @param m Middle index separating subarrays
  * @param r Right index of second subarray
  */
-static void merge(int arr[], int l, int m, int r) {
+static void merge(arr_t arr[], int l, int m, int r) {
     int i, j, k;
     int n1 = m - l + 1;
     int n2 = r - m;
 
     // Create temporary arrays
-    int L[n1], R[n2];
+    arr_t L[n1], R[n2];
 
     // Copy data to temporary arrays L[] and R[]
     for (i = 0; i < n1; i++)
@@ -102,7 +102,7 @@ static void merge(int arr[], int l, int m, int r) {
     }
 }
 
-static void mergeSortRecursive(int arr[], int l, int r) {
+static void mergeSortRecursive(arr_t arr[], int l, int r) {
     if (l < r) {
         // Find the middle point
         int m = l + (r - l) / 2;
@@ -122,7 +122,7 @@ static void mergeSortRecursive(int arr[], int l, int r) {
  * @note Time complexity: O(n log n), Space complexity: O(n)
  * @note Divide and conquer algorithm with consistent performance
  */
-void Claude::mergeSort(int arr[], int n) {
+void Claude::mergeSort(arr_t arr[], int n) {
     // Call recursive helper with full array range
     mergeSortRecursive(arr, 0, n - 1);
 }
@@ -136,8 +136,8 @@ void Claude::mergeSort(int arr[], int n) {
  * @param high Ending index of the partition
  * @return Index of the pivot element after partitioning
  */
-static int partition(int arr[], int low, int high) {
-    int pivot = arr[high];
+static int partition(arr_t arr[], int low, int high) {
+    arr_t pivot = arr[high];
     int i = (low - 1);
 
     for (int j = low; j <= high - 1; j++) {
@@ -150,13 +150,13 @@ static int partition(int arr[], int low, int high) {
         }
     }
     // Swap pivot
-    int temp = arr[i + 1];
+    arr_t temp = arr[i + 1];
     arr[i + 1] = arr[high];
     arr[high] = temp;
     return (i + 1);
 }
 
-static void quickSortRecursive(int arr[], int low, int high) {
+static void quickSortRecursive(arr_t arr[], int low, int high) {
     if (low < high) {
         // Partition the array
         int pi = partition(arr, low, high);
@@ -174,7 +174,7 @@ static void quickSortRecursive(int arr[], int low, int high) {
  * @note Time complexity: O(n log n) average, O(n^2) worst case
  * @note In-place sorting with good average-case performance
  */
-void Claude::quickSort(int arr[], int n) {
+void Claude::quickSort(arr_t arr[], int n) {
     // Call recursive helper with full array range
     quickSortRecursive(arr, 0, n - 1);
 }
@@ -187,7 +187,7 @@ void Claude::quickSort(int arr[], int n) {
  * @param n Size of the heap
  * @param i Root index of the subtree
  */
-static void heapify(int arr[], int n, int i) {
+static void heapify(arr_t arr[], int n, int i) {
     int largest = i;
     int left = 2 * i + 1;
     int right = 2 * i + 2;
@@ -202,7 +202,7 @@ static void heapify(int arr[], int n, int i) {
 
     // If largest is not root, swap and continue heapifying
     if (largest != i) {
-        int swap = arr[i];
+        arr_t swap = arr[i];
         arr[i] = arr[largest];
         arr[largest] = swap;
 
@@ -218,7 +218,7 @@ static void heapify(int arr[], int n, int i) {
  * @note Time complexity: O(n log n)
  * @note In-place sorting with consistent performance
  */
-void Claude::heapSort(int arr[], int n) {
+void Claude::heapSort(arr_t arr[], int n) {
     // Build heap (rearrange array)
     for (int i = n / 2 - 1; i >= 0; i--)
         heapify(arr, n, i);
@@ -226,7 +226,7 @@ void Claude::heapSort(int arr[], int n) {
     // Extract elements from heap one by one
     for (int i = n - 1; i > 0; i--) {
         // Move current root to end
-        int temp = arr[0];
+        arr_t temp = arr[0];
         arr[0] = arr[i];
         arr[i] = temp;
 
@@ -244,14 +244,14 @@ void Claude::heapSort(int arr[], int n) {
  * @note Time complexity: O(n^2)
  * @note Simple sorting algorithm similar to insertion sort
  */
-void Claude::gnomeSort(int arr[], int n) {
+void Claude::gnomeSort(arr_t arr[], int n) {
     int index = 0;
     while (index < n) {
         if (index == 0 || arr[index] >= arr[index - 1])
             index++;
         else {
             // Swap elements
-            int temp = arr[index];
+            arr_t temp = arr[index];
             arr[index] = arr[index - 1];
             arr[index - 1] = temp;
             index--;
@@ -277,9 +277,9 @@ int abs(int x) {
  * @param n Number of elements
  * @param exp Current digit's place value
  */
-void countSort(int arr[], int n, int exp) {
-    int output[n];          // Output array
-    int count[10] = { 0 };  // Counting array for digits 0-9
+void countSort(arr_t arr[], int n, int exp) {
+    arr_t output[n];          // Output array
+    arr_t count[10] = { 0 };  // Counting array for digits 0-9
 
     // Store count of occurrences in count[]
     for (int i = 0; i < n; i++)
@@ -313,10 +313,10 @@ void countSort(int arr[], int n, int exp) {
  * - Works with Arduino's memory constraints
  * - Sorts by individual digits, starting from least significant
  */
-void Claude::radixSort(int arr[], int n) {
+void Claude::radixSort(arr_t arr[], int n) {
     // Separate positive and negative numbers
-    int positives[n];
-    int negatives[n];
+    arr_t positives[n];
+    arr_t negatives[n];
     int posCount = 0, negCount = 0;
 
     // Separate positive and negative numbers
@@ -369,12 +369,12 @@ void Claude::radixSort(int arr[], int n) {
  * @note Time complexity: O(n log n) - O(n^2)
  * @note Improvement over insertion sort for larger arrays
  */
-void Claude::shellSort(int arr[], int n) {
+void Claude::shellSort(arr_t arr[], int n) {
     // Start with a big gap, then reduce gap
     for (int gap = n / 2; gap > 0; gap /= 2) {
         // Do gapped insertion sort for this gap size
         for (int i = gap; i < n; i++) {
-            int temp = arr[i];
+            arr_t temp = arr[i];
             int j;
 
             // Shift earlier gap-sorted elements up until the correct location for arr[i] is found
@@ -396,7 +396,7 @@ void Claude::shellSort(int arr[], int n) {
  * @note Time complexity: O(n log n) with the right shrink factor
  * @note Improvement over bubble sort with gap reduction
  */
-void Claude::combSort(int arr[], int n) {
+void Claude::combSort(arr_t arr[], int n) {
     // Initialize gap
     int gap = n;
     bool swapped = true;
@@ -414,7 +414,7 @@ void Claude::combSort(int arr[], int n) {
         for (int i = 0; i < n - gap; i++) {
             if (arr[i] > arr[i + gap]) {
                 // Swap elements
-                int temp = arr[i];
+                arr_t temp = arr[i];
                 arr[i] = arr[i + gap];
                 arr[i + gap] = temp;
                 swapped = true;
@@ -430,10 +430,10 @@ void Claude::combSort(int arr[], int n) {
  * @param arr Integer array to be flipped
  * @param k Index up to which array will be flipped
  */
-static void flip(int arr[], int k) {
+static void flip(arr_t arr[], int k) {
     int start = 0;
     while (start < k) {
-        int temp = arr[start];
+        arr_t temp = arr[start];
         arr[start] = arr[k];
         arr[k] = temp;
         start++;
@@ -447,7 +447,7 @@ static void flip(int arr[], int k) {
  * @param n Number of elements
  * @return Index of the maximum element
  */
-static int findMaxIndex(int arr[], int n) {
+static int findMaxIndex(arr_t arr[], int n) {
     int maxIndex = 0;
     for (int i = 0; i < n; i++)
         if (arr[i] > arr[maxIndex])
@@ -462,7 +462,7 @@ static int findMaxIndex(int arr[], int n) {
  * @note Time complexity: O(n^2)
  * @note Unique sorting method using only pancake flipping
  */
-void Claude::pancakeSort(int arr[], int n) {
+void Claude::pancakeSort(arr_t arr[], int n) {
     // Start from the complete array and one by one reduce current size
     for (int currSize = n; currSize > 1; currSize--) {
         // Find index of the maximum element in arr[0..currSize-1]
