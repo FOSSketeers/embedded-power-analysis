@@ -168,6 +168,15 @@ static void countSort(int arr[], int n, int exp) {
     for (int i = 0; i < n; i++) arr[i] = output[i];
 }
 
+
+static void _radixSort(int arr[], int n) {
+    int max = arr[0];
+    for (int i = 1; i < n; i++)
+        if (arr[i] > max) max = arr[i];
+
+    for (int exp = 1; max / exp > 0; exp *= 10) countSort(arr, n, exp);
+}
+
 /**
  * Radix Sort: Sorts integers digit by digit using counting sort as a subroutine.
  * 
@@ -175,11 +184,23 @@ static void countSort(int arr[], int n, int exp) {
  * @param n Size of the array.
  */
 void ChatGPT::radixSort(int arr[], int n) {
-    int max = arr[0];
-    for (int i = 1; i < n; i++)
-        if (arr[i] > max) max = arr[i];
+    // Separate negative and positive numbers
+    int negatives[n], positives[n];
+    int negCount = 0, posCount = 0;
 
-    for (int exp = 1; max / exp > 0; exp *= 10) countSort(arr, n, exp);
+    for (int i = 0; i < n; i++) {
+        if (arr[i] < 0) negatives[negCount++] = -arr[i];
+        else positives[posCount++] = arr[i];
+    }
+
+    // Sort negatives and positives independently
+    if (negCount > 0) _radixSort(negatives, negCount);
+    if (posCount > 0) _radixSort(positives, posCount);
+
+    // Merge sorted negatives (reversed) and positives into the original array
+    int idx = 0;
+    for (int i = negCount - 1; i >= 0; i--) arr[idx++] = -negatives[i];
+    for (int i = 0; i < posCount; i++) arr[idx++] = positives[i];
 }
 
 // 8. Shell Sort

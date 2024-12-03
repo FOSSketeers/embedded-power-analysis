@@ -222,21 +222,15 @@ void Gemini::gnomeSort(int arr[], int n) {
 
 // 7. Radix Sort
 
-static int getMax(int arr[], int n) {
-    int max = arr[0];
-    for (int i = 1; i < n; i++)
-        if (arr[i] > max)
-            max = arr[i];
-    return max;
-}
-
 static void countSort(int arr[], int n, int exp) {
     int output[n];  // output array
     int count[10] = { 0 };
 
     // Store count of occurrences in count[]
-    for (int i = 0; i < n; i++)
-        count[(arr[i] / exp) % 10]++;
+    for (int i = 0; i < n; i++) {
+        int idx =
+            count[(arr[i] / exp) % 10]++;
+    }
 
     // Change count[i] so that count[i] now contains
     // actual position of this digit in output[]
@@ -256,18 +250,29 @@ static void countSort(int arr[], int n, int exp) {
 }
 
 void Gemini::radixSort(int arr[], int n) {
-    // Sorts an array of integers using the Radix Sort algorithm.
-    // Input: An integer array `arr` and its size `n`.
-    // Output: The sorted array in ascending order.
+    // Find the maximum and minimum values to determine the maximum number of digits
+    int max = arr[0];
+    int min = arr[0];
+    for (int i = 1; i < n; i++) {
+        max = (arr[i] > max) ? arr[i] : max;
+        min = (arr[i] < min) ? arr[i] : min;
+    }
 
-    // Find the maximum number to know the number of digits
-    int max = getMax(arr, n);
+    // Shift all numbers to non-negative range
+    int shift = -min;
+    for (int i = 0; i < n; i++) {
+        arr[i] += shift;
+    }
 
-    // Do counting sort for every digit. Note that instead
-    // of passing digit number, exp is passed. exp is 10^i
-    // where i is current digit number
-    for (int exp = 1; max / exp > 0; exp *= 10)
+    // Perform radix sort on the shifted numbers
+    for (int exp = 1; max / exp > 0; exp *= 10) {
         countSort(arr, n, exp);
+    }
+
+    // Shift the numbers back to their original range
+    for (int i = 0; i < n; i++) {
+        arr[i] -= shift;
+    }
 }
 
 // 8. Shell Sort

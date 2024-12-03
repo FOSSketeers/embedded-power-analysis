@@ -259,20 +259,16 @@ void Claude::gnomeSort(int arr[], int n) {
     }
 }
 
-// 7. Radix Sort (for non-negative integers)
+// 7. Radix Sort
 
 /**
- * Finds the maximum number to know number of digits
- * @param arr Integer array
- * @param n Number of elements in the array
- * @return Maximum number in the array
+ * Manual absolute value function
+ * 
+ * @param x Integer input
+ * @return Absolute value of the input
  */
-static int getMax(int arr[], int n) {
-    int mx = arr[0];
-    for (int i = 1; i < n; i++)
-        if (arr[i] > mx)
-            mx = arr[i];
-    return mx;
+int abs(int x) {
+    return x < 0 ? -x : x;
 }
 
 /**
@@ -281,13 +277,13 @@ static int getMax(int arr[], int n) {
  * @param n Number of elements
  * @param exp Current digit's place value
  */
-static void countSort(int arr[], int n, int exp) {
-    int output[n];
-    int count[10] = { 0 };
+void countSort(int arr[], int n, int exp) {
+    int output[n];          // Output array
+    int count[10] = { 0 };  // Counting array for digits 0-9
 
-    // Store count of occurrences
+    // Store count of occurrences in count[]
     for (int i = 0; i < n; i++)
-        count[(arr[i] / exp) % 10]++;
+        count[abs((arr[i] / exp) % 10)]++;
 
     // Change count[i] so that count[i] now contains actual
     // position of this digit in output[]
@@ -296,30 +292,72 @@ static void countSort(int arr[], int n, int exp) {
 
     // Build the output array
     for (int i = n - 1; i >= 0; i--) {
-        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
-        count[(arr[i] / exp) % 10]--;
+        int digit = abs((arr[i] / exp) % 10);
+        output[count[digit] - 1] = arr[i];
+        count[digit]--;
     }
 
-    // Copy the output array to arr[], so that arr[] now
-    // contains sorted numbers according to current digit
+    // Copy the output array to arr[]
     for (int i = 0; i < n; i++)
         arr[i] = output[i];
 }
 
 /**
- * Implements Radix Sort algorithm
- * @param arr Integer array to be sorted (non-negative)
+ * Radix Sort Algorithm for Signed Integers
+ * 
+ * @param arr Integer array to be sorted in-place
  * @param n Number of elements in the array
- * @note Time complexity: O(d*(n+k)), where d is number of digits
- * @note Works best for fixed-width integers
+ * 
+ * Algorithm characteristics:
+ * - Handles both positive and negative integers
+ * - Works with Arduino's memory constraints
+ * - Sorts by individual digits, starting from least significant
  */
 void Claude::radixSort(int arr[], int n) {
-    // Find the maximum number to know number of digits
-    int m = getMax(arr, n);
+    // Separate positive and negative numbers
+    int positives[n];
+    int negatives[n];
+    int posCount = 0, negCount = 0;
 
-    // Do counting sort for every digit
-    for (int exp = 1; m / exp > 0; exp *= 10)
-        countSort(arr, n, exp);
+    // Separate positive and negative numbers
+    for (int i = 0; i < n; i++) {
+        if (arr[i] >= 0)
+            positives[posCount++] = arr[i];
+        else
+            negatives[negCount++] = -arr[i];  // Store absolute value
+    }
+
+    // Find max for positive numbers
+    int posMax = posCount > 0 ? positives[0] : 0;
+    for (int i = 1; i < posCount; i++)
+        if (positives[i] > posMax)
+            posMax = positives[i];
+
+    // Find max for negative numbers
+    int negMax = negCount > 0 ? negatives[0] : 0;
+    for (int i = 1; i < negCount; i++)
+        if (negatives[i] > negMax)
+            negMax = negatives[i];
+
+    // Radix sort for non-negative numbers
+    // Sort positive numbers
+    for (int exp = 1; posMax / exp > 0; exp *= 10)
+        countSort(positives, posCount, exp);
+
+    // Sort negative numbers
+    for (int exp = 1; negMax / exp > 0; exp *= 10)
+        countSort(negatives, negCount, exp);
+
+    // Reconstruct the original array
+    int index = 0;
+
+    // First add negative numbers in reverse order
+    for (int i = negCount - 1; i >= 0; i--)
+        arr[index++] = -negatives[i];
+
+    // Then add positive numbers
+    for (int i = 0; i < posCount; i++)
+        arr[index++] = positives[i];
 }
 
 // 8. Shell Sort
