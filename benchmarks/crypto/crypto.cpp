@@ -336,6 +336,9 @@ void runBenchmark() {
 }
 
 void setup() {
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, LOW);
+
     _CommonInitializer();
     for (int i = 0; i < EXPERIMENT_REPETITION; i++) {
         delay(EXPERIMENT_DELAY);
@@ -343,7 +346,6 @@ void setup() {
     }
 
     setState(255, "finish");
-    pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(LED_BUILTIN, HIGH);
 }
 
