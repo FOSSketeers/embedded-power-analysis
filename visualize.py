@@ -1,7 +1,8 @@
-import sys
+import argparse
 import time
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
+from functools import partial
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -49,10 +50,7 @@ def load_data(file: str) -> pd.DataFrame:
     return pd.read_csv(file, usecols=COLS.keys(), dtype=COLS, converters={"D0-D7": lambda s: index_mappings[np.uint8(int(s, 2))]}) # type: ignore
 
 
-def process_data(data: pd.DataFrame) -> tuple[pd.Series, pd.Series, pd.Series]:
-    # assuming the files are from the same benchmark type
-    benchmark_type = Benchmarks.LLMSORT if "llmsort" in sys.argv[1] else Benchmarks.CRYPTO
-
+def process_data(data: pd.DataFrame, benchmark_type: Benchmarks) -> tuple[pd.Series, pd.Series, pd.Series]:
     # maps indices to titles
     benchmark_mappings = dict(zip(range(256), STATE_TITLES[benchmark_type])) # why didn't I use enumerate() here? whatevs, it's almost 4 AM
 
@@ -75,17 +73,24 @@ def main() -> None:
     datas: list[pd.DataFrame] = []
     processed_datas: list[tuple[pd.Series, pd.Series, pd.Series]] = []
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('files', action='extend', nargs='+')
+    args = parser.parse_args()
+
+    # assuming the files are from the same benchmark type
+    benchmark_type = Benchmarks.LLMSORT if "llmsort" in args.files[0] else Benchmarks.CRYPTO
+
     with ThreadPoolExecutor() as executor:
         with benchmark("Load CSV"):
-            datas.extend(executor.map(load_data, sys.argv[1:]))
+            datas.extend(executor.map(load_data, args.files))
 
         with benchmark("Process data"):
-            processed_datas.extend(executor.map(process_data, datas))
+            processed_datas.extend(executor.map(partial(process_data, benchmark_type=benchmark_type), datas))
 
     with benchmark("Plot"):
-        fig, axs = plt.subplots(nrows=3, ncols=len(sys.argv[1:]), squeeze=False, sharex="all", sharey="row")
+        fig, axs = plt.subplots(nrows=3, ncols=len(args.files), squeeze=False, sharex="all", sharey="row")
 
-        for (column, file), processed_data in zip(enumerate(sys.argv[1:]), processed_datas):
+        for (column, file), processed_data in zip(enumerate(args.files), processed_datas):
             total_usages, timings, efficiency = processed_data
 
             print("######### {file} #########")
