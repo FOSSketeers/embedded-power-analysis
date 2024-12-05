@@ -1,14 +1,16 @@
 import argparse
 import random
 
-def generate_random_array(array_size, number_range, data_type, precision):
+def generate_random_array(array_size, number_range, data_type, precision, sorting):
     """
-    Generate a random array with the given size, range, and data type.
+    Generate a random array with the given size, range, data type, and sorting order.
     
     Args:
         array_size (int): The number of elements in the array.
         number_range (tuple): A tuple (min, max) defining the range of numbers for the array.
-        data_type (str): The type of numbers to generate ('int', 'float', or 'double').
+        data_type (str): The type of numbers to generate ('int' or 'double').
+        precision (int): The number of decimal places for double types.
+        sorting (str): The sorting order ('none', 'sorted', 'reverse').
         
     Returns:
         str: A formatted string representing a C++ array.
@@ -28,6 +30,12 @@ def generate_random_array(array_size, number_range, data_type, precision):
         random_array = [round(random.uniform(min_val, max_val), precision) for _ in range(array_size)]
     else:
         raise ValueError(f"Unsupported data type: {data_type}")
+
+    # Apply sorting
+    if sorting == "sorted":
+        random_array.sort()
+    elif sorting == "reverse":
+        random_array.sort(reverse=True)
 
     # Format as a C++ array
     cpp_array = "{ " + ", ".join(map(str, random_array)) + " };"
@@ -66,6 +74,12 @@ if __name__ == "__main__":
         default=2,
         help="The number of decimal places for double types. Default is 2."
     )
+    parser.add_argument(
+        "-o", "--order",
+        choices=["none", "sorted", "reverse"],
+        default="none",
+        help="The order of the array (none, sorted, reverse). Default is none."
+    )
     args = parser.parse_args()
 
     try:
@@ -73,7 +87,8 @@ if __name__ == "__main__":
             args.array_size,
             (args.min_value, args.max_value),
             args.type,
-            args.precision
+            args.precision,
+            args.order
         )
         print(cpp_array_output)
     except ValueError as e:
