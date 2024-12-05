@@ -12,11 +12,12 @@ We experiment different sorting algorithms with different arrays in different de
 
 #### Experiment Log
 
-| Date | Device | Code Version | Array Size | Array Type | Circuit | Measurement |
-| ---- | ------ | ------------ | ---------- | ---------- | ------- | ----------- |
-|      |        |              |            |            |         |             |
-|      |        |              |            |            |         |             |
-|      |        |              |            |            |         |             |
+| Date | Device | Commit Hash | Array Size | Array Type | Array Characteristics | Circuit | Measurement |
+| ---- | ------ | ------------ | ---------- | ---------- | ---------- | ------- | ----------- |
+| 2024-11-18 | Uno R3 (clone) | [d9e1f62](https://github.com/div72/bbm479/commit/d9e1f629729e626ce25a95ed244edd289c76b294) | 300 | `int[]` with only non-negative numbers | Generated before each algo, pseudo-random | [circuit 000](/circuits/000.png) | [r3-sort-300-digitalout-5runs.csv.xz](/measurements/old-broken-state-transitions/r3-sort-300-digitalout-5runs.csv.xz) |
+| 2024-11-18 | Uno R4 Minima (clone) | [9acfcf9](https://github.com/div72/bbm479/commit/9acfcf9bb049b7724b56dbb1016f7749e48f11f6) | 300 | `int[]` with only non-negative numbers | Generated before each algo, pseudo-random | [circuit 001](/circuits/001.png) | [r4-sort-300-digitalout-5runs.csv.xz](/measurements/old-broken-state-transitions/r4-sort-300-digitalout-5runs.csv.xz) |
+|      |        |              |            |            |         |             | |
+
 
 ### 2. crypto
 
@@ -24,10 +25,10 @@ Lorem ipsum
 
 #### Experiment Log
 
-| Date | Device | Code Version | Circuit | Measurement |
+| Date | Device | Commit Hash | Circuit | Measurement |
 | ---- | ------ | ------------ | ------- | ----------- |
-|      |        |              |         |             |
-|      |        |              |         |             |
+| 2024-12-03 | Uno R4 Minima (clone) | [65cc397](https://github.com/div72/bbm479/commit/65cc397122b0b00d1971487c2bf67bac3a54556f) | [circuit 003](/circuits/003.png) | [r4-crypto-digitalout-1runs.csv.xz](/measurements/r4-crypto-digitalout-1runs.csv.xz) |
+| 2024-12-04 | Uno R3 (clone) | [e1edc7b](https://github.com/div72/bbm479/commit/e1edc7b80b04c2694d0e707135cc02af977c1860) | [circuit 002](/circuits/002.png) | [r3-crypto-digitalout-1runs.csv.xz](/measurements/r3-crypto-digitalout-1runs.csv.xz) |
 |      |        |              |         |             |
 
 ### 3. llm-sort
@@ -36,8 +37,8 @@ Here we experiment whether there is a significant difference in the performance 
 
 #### Experiment Log
 
-| Date | Device | Code Version | Array Size | Array Type | Circuit | Measurement |
-| ---- | ------ | ------------ | ---------- | ---------- | ------- | ----------- |
-|      |        |              |            |            |         |             |
-|      |        |              |            |            |         |             |
-|      |        |              |            |            |         |             |
+| Date | Device | Commit Hash | Array Size | Array Type | Array Characteristics | Circuit | Measurement |
+| ---- | ------ | ------------ | ---------- | ---------- | ------- | ------- | ----------- |
+| 2024-12-03 | Uno R4 Minima (clone) | [65cc397](https://github.com/div72/bbm479/commit/65cc397122b0b00d1971487c2bf67bac3a54556f) | 100 | `int[]` with numbers between [-300, 300] | Predefined random array generated with [random_array_generator.py](https://github.com/div72/bbm479/blob/65cc397122b0b00d1971487c2bf67bac3a54556f/random_array_generator.py) | [circuit 003](/circuits/003.png) | [r4-llmsort-predefinedarray-int-100-digitalout-1runs.csv.xz](/measurements/r4-llmsort-predefinedarray-int-100-digitalout-1runs.csv.xz) |
+| 2024-12-04 | Uno R3 (clone) | [e1edc7b](https://github.com/div72/bbm479/commit/e1edc7b80b04c2694d0e707135cc02af977c1860) | 100 | `int[]` with numbers between [-300, 300] | Predefined random array generated with [random_array_generator.py](https://github.com/div72/bbm479/blob/65cc397122b0b00d1971487c2bf67bac3a54556f/random_array_generator.py) | [circuit 002](/circuits/002.png) | [r3-llmsort-predefinedarray-int-100-digitalout-1runs.csv.xz](/measurements/r3-llmsort-predefinedarray-int-100-digitalout-1runs.csv.xz) |
+|      |        |              |            |            |         |             | |
