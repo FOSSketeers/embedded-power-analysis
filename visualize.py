@@ -69,13 +69,25 @@ def process_data(data: pd.DataFrame, benchmark_type: Benchmarks) -> tuple[pd.Ser
     return total_usages, timings, efficiency
 
 
+def hue(data: pd.Series, hue_mode: str) -> pd.Series | pd.Index | None:
+    if hue_mode == "y":
+        return data
+
+    parts: list[str] = hue_mode.split(":")
+
+    if parts[0] == "group":
+        return data.index.map(lambda i: i.split("_")[int(parts[1])])
+
+    return None
+
+
 def main() -> None:
     datas: list[pd.DataFrame] = []
     processed_datas: list[tuple[pd.Series, pd.Series, pd.Series]] = []
 
     parser = argparse.ArgumentParser()
     parser.add_argument('files', action='extend', nargs='+')
-    parser.add_argument('--hue', default=True, action=argparse.BooleanOptionalAction)
+    parser.add_argument('--hue', default="y")
     args = parser.parse_args()
 
     # assuming the files are from the same benchmark type
@@ -103,17 +115,17 @@ def main() -> None:
             print("===== ENERGY EFFICIENCY =====")
             print(efficiency.sort_values())
 
-            consumption_plot = sns.barplot(x=total_usages.index.rename("States"), y=total_usages.rename("Watt-hours"), hue=total_usages.rename("Watt-hours") if args.hue else None, ax=axs[0, column])
+            consumption_plot = sns.barplot(x=total_usages.index.rename("States"), y=total_usages.rename("Watt-hours"), hue=hue(total_usages.rename("Watt-hours"), args.hue), ax=axs[0, column])
             consumption_plot.set_ylim(0, 0.1 * 10 ** -5)
             consumption_plot.set_title(f"Total Energy Consumption - {file}")
             consumption_plot.tick_params(axis='x', rotation=75)
 
-            time_plot = sns.barplot(x=timings.index.rename("States"), y=timings.rename("Microseconds"), hue=timings.rename("Microseconds") if args.hue else None, ax=axs[1, column])
+            time_plot = sns.barplot(x=timings.index.rename("States"), y=timings.rename("Microseconds"), hue=hue(timings.rename("Microseconds"), args.hue), ax=axs[1, column])
             time_plot.set_ylim(0, 30)
             time_plot.set_title(f"Total Time Spent - {file}")
             time_plot.tick_params(axis='x', rotation=75)
 
-            efficiency_plot = sns.barplot(x=efficiency.index.rename("States"), y=efficiency.rename("Watt-hour per ms"), hue=efficiency.rename("Watt-hour per ms") if args.hue else None, ax=axs[2, column])
+            efficiency_plot = sns.barplot(x=efficiency.index.rename("States"), y=efficiency.rename("Watt-hour per ms"), hue=hue(efficiency.rename("Watt-hour per ms"), args.hue), ax=axs[2, column])
             efficiency_plot.set_title(f"Efficiency - {file}")
             efficiency_plot.tick_params(axis='x', rotation=75)
 
