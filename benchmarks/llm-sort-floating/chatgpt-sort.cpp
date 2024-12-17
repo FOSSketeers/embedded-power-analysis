@@ -8,11 +8,11 @@
  * @param arr[] Array of integers to be sorted.
  * @param n Size of the array.
  */
-void ChatGPT::bubbleSort(double arr[], int n) {
+void ChatGPT::bubbleSort(float arr[], int n) {
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
-                double temp = arr[j];
+                float temp = arr[j];
                 arr[j] = arr[j + 1];
                 arr[j + 1] = temp;
             }
@@ -28,9 +28,9 @@ void ChatGPT::bubbleSort(double arr[], int n) {
  * @param arr[] Array of integers to be sorted.
  * @param n Size of the array.
  */
-void ChatGPT::insertionSort(double arr[], int n) {
+void ChatGPT::insertionSort(float arr[], int n) {
     for (int i = 1; i < n; i++) {
-        double key = arr[i];
+        float key = arr[i];
         int j = i - 1;
         while (j >= 0 && arr[j] > key) {
             arr[j + 1] = arr[j];
@@ -45,14 +45,14 @@ void ChatGPT::insertionSort(double arr[], int n) {
 /**
  * Implements Merge Sort algorithm.
  * Divides the array recursively and merges sorted halves.
- * Input: A double array `arr` of size `n`.
+ * Input: A float array `arr` of size `n`.
  * Output: The array is sorted in ascending order.
  * Note: Uses recursion and requires a helper function.
  */
-static void merge(double arr[], int left, int mid, int right) {
+static void merge(float arr[], int left, int mid, int right) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
-    double L[n1], R[n2];
+    float L[n1], R[n2];
     for (int i = 0; i < n1; i++) L[i] = arr[left + i];
     for (int i = 0; i < n2; i++) R[i] = arr[mid + 1 + i];
     int i = 0, j = 0, k = left;
@@ -64,7 +64,7 @@ static void merge(double arr[], int left, int mid, int right) {
     while (j < n2) arr[k++] = R[j++];
 }
 
-static void mergeSortHelper(double arr[], int left, int right) {
+static void mergeSortHelper(float arr[], int left, int right) {
     if (left < right) {
         int mid = left + (right - left) / 2;
         mergeSortHelper(arr, left, mid);
@@ -73,7 +73,7 @@ static void mergeSortHelper(double arr[], int left, int right) {
     }
 }
 
-void ChatGPT::mergeSort(double arr[], int n) {
+void ChatGPT::mergeSort(float arr[], int n) {
     mergeSortHelper(arr, 0, n - 1);
 }
 
@@ -82,28 +82,28 @@ void ChatGPT::mergeSort(double arr[], int n) {
 /**
  * Implements Quick Sort algorithm.
  * Partitions the array around a pivot and recursively sorts partitions.
- * Input: A double array `arr` of size `n`.
+ * Input: A float array `arr` of size `n`.
  * Output: The array is sorted in ascending order.
  * Note: Uses recursion and requires a helper function.
  */
-int partition(double arr[], int low, int high) {
-    double pivot = arr[high];
+int partition(float arr[], int low, int high) {
+    float pivot = arr[high];
     int i = low - 1;
     for (int j = low; j < high; j++) {
         if (arr[j] < pivot) {
             i++;
-            double temp = arr[i];
+            float temp = arr[i];
             arr[i] = arr[j];
             arr[j] = temp;
         }
     }
-    double temp = arr[i + 1];
+    float temp = arr[i + 1];
     arr[i + 1] = arr[high];
     arr[high] = temp;
     return i + 1;
 }
 
-static void quickSortHelper(double arr[], int low, int high) {
+static void quickSortHelper(float arr[], int low, int high) {
     if (low < high) {
         int pi = partition(arr, low, high);
         quickSortHelper(arr, low, pi - 1);
@@ -111,7 +111,7 @@ static void quickSortHelper(double arr[], int low, int high) {
     }
 }
 
-void ChatGPT::quickSort(double arr[], int n) {
+void ChatGPT::quickSort(float arr[], int n) {
     quickSortHelper(arr, 0, n - 1);
 }
 
@@ -120,27 +120,27 @@ void ChatGPT::quickSort(double arr[], int n) {
 /**
  * Implements Heap Sort algorithm.
  * Converts the array into a max-heap and sorts it by extracting the largest element iteratively.
- * Input: A double array `arr` of size `n`.
+ * Input: A float array `arr` of size `n`.
  * Output: The array is sorted in ascending order.
  */
-void heapify(double arr[], int n, int i) {
+void heapify(float arr[], int n, int i) {
     int largest = i;
     int left = 2 * i + 1;
     int right = 2 * i + 2;
     if (left < n && arr[left] > arr[largest]) largest = left;
     if (right < n && arr[right] > arr[largest]) largest = right;
     if (largest != i) {
-        double temp = arr[i];
+        float temp = arr[i];
         arr[i] = arr[largest];
         arr[largest] = temp;
         heapify(arr, n, largest);
     }
 }
 
-void ChatGPT::heapSort(double arr[], int n) {
+void ChatGPT::heapSort(float arr[], int n) {
     for (int i = n / 2 - 1; i >= 0; i--) heapify(arr, n, i);
     for (int i = n - 1; i > 0; i--) {
-        double temp = arr[0];
+        float temp = arr[0];
         arr[0] = arr[i];
         arr[i] = temp;
         heapify(arr, i, 0);
@@ -152,16 +152,16 @@ void ChatGPT::heapSort(double arr[], int n) {
 /**
  * Implements Gnome Sort algorithm.
  * Moves an element to its correct position in a manner similar to a garden gnome sorting flower pots.
- * Input: A double array `arr` of size `n`.
+ * Input: A float array `arr` of size `n`.
  * Output: The array is sorted in ascending order.
  */
-void ChatGPT::gnomeSort(double arr[], int n) {
+void ChatGPT::gnomeSort(float arr[], int n) {
     int index = 0;
     while (index < n) {
         if (index == 0 || arr[index] >= arr[index - 1]) {
             index++;
         } else {
-            double temp = arr[index];
+            float temp = arr[index];
             arr[index] = arr[index - 1];
             arr[index - 1] = temp;
             index--;
@@ -171,7 +171,7 @@ void ChatGPT::gnomeSort(double arr[], int n) {
 
 // 7. Radix Sort
 
-void ChatGPT::radixSort(double arr[], int n) {
+void ChatGPT::radixSort(float arr[], int n) {
     // Radix sort does not work directly on floating-point numbers due to the
     // absence of a straightforward digit-extraction process. This algorithm
     // is not implemented.
@@ -183,13 +183,13 @@ void ChatGPT::radixSort(double arr[], int n) {
 /**
  * Implements Shell Sort algorithm.
  * Sorts the array by comparing elements separated by a gap that decreases over iterations.
- * Input: A double array `arr` of size `n`.
+ * Input: A float array `arr` of size `n`.
  * Output: The array is sorted in ascending order.
  */
-void ChatGPT::shellSort(double arr[], int n) {
+void ChatGPT::shellSort(float arr[], int n) {
     for (int gap = n / 2; gap > 0; gap /= 2) {
         for (int i = gap; i < n; i++) {
-            double temp = arr[i];
+            float temp = arr[i];
             int j;
             for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
                 arr[j] = arr[j - gap];
@@ -204,10 +204,10 @@ void ChatGPT::shellSort(double arr[], int n) {
 /**
  * Implements Comb Sort algorithm.
  * Improves Bubble Sort by eliminating turtles (small values) using a gap reduction factor.
- * Input: A double array `arr` of size `n`.
+ * Input: A float array `arr` of size `n`.
  * Output: The array is sorted in ascending order.
  */
-void ChatGPT::combSort(double arr[], int n) {
+void ChatGPT::combSort(float arr[], int n) {
     int gap = n;
     bool swapped = true;
     while (gap > 1 || swapped) {
@@ -215,7 +215,7 @@ void ChatGPT::combSort(double arr[], int n) {
         swapped = false;
         for (int i = 0; i + gap < n; i++) {
             if (arr[i] > arr[i + gap]) {
-                double temp = arr[i];
+                float temp = arr[i];
                 arr[i] = arr[i + gap];
                 arr[i + gap] = temp;
                 swapped = true;
@@ -226,10 +226,10 @@ void ChatGPT::combSort(double arr[], int n) {
 
 // 10. Pancake Sort
 
-static void flip(double arr[], int i) {
+static void flip(float arr[], int i) {
     int start = 0;
     while (start < i) {
-        double temp = arr[start];
+        float temp = arr[start];
         arr[start] = arr[i];
         arr[i] = temp;
         start++;
@@ -240,10 +240,10 @@ static void flip(double arr[], int i) {
 /**
  * Implements Pancake Sort algorithm.
  * Repeatedly flips the largest unsorted element to the top, then to its correct position.
- * Input: A double array `arr` of size `n`.
+ * Input: A float array `arr` of size `n`.
  * Output: The array is sorted in ascending order.
  */
-void ChatGPT::pancakeSort(double arr[], int n) {
+void ChatGPT::pancakeSort(float arr[], int n) {
     for (int curr_size = n; curr_size > 1; curr_size--) {
         int max_index = 0;
         for (int i = 1; i < curr_size; i++) {

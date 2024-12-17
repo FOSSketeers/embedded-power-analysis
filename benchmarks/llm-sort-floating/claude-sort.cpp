@@ -2,11 +2,11 @@
 
 // 1. Bubble Sort
 
-void Claude::bubbleSort(double arr[], int n) {
+void Claude::bubbleSort(float arr[], int n) {
     /* 
      * Bubble Sort Algorithm
      * Input: 
-     *   - arr: Pointer to a double array to be sorted
+     *   - arr: Pointer to a float array to be sorted
      *   - n: Number of elements in the array
      * Behavior: Sorts array in-place in ascending order
      * Time Complexity: O(n^2)
@@ -18,7 +18,7 @@ void Claude::bubbleSort(double arr[], int n) {
         for (int j = 0; j < n - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
                 // Swap elements
-                double temp = arr[j];
+                float temp = arr[j];
                 arr[j] = arr[j + 1];
                 arr[j + 1] = temp;
                 swapped = true;
@@ -31,11 +31,11 @@ void Claude::bubbleSort(double arr[], int n) {
 
 // 2. Insertion Sort
 
-void Claude::insertionSort(double arr[], int n) {
+void Claude::insertionSort(float arr[], int n) {
     /* 
      * Insertion Sort Algorithm
      * Input: 
-     *   - arr: Pointer to a double array to be sorted
+     *   - arr: Pointer to a float array to be sorted
      *   - n: Number of elements in the array
      * Behavior: Sorts array in-place in ascending order
      * Time Complexity: O(n^2)
@@ -43,7 +43,7 @@ void Claude::insertionSort(double arr[], int n) {
      * Note: Efficient for small arrays or nearly sorted data
      */
     for (int i = 1; i < n; i++) {
-        double key = arr[i];
+        float key = arr[i];
         int j = i - 1;
         
         // Move elements greater than key one position ahead
@@ -57,14 +57,14 @@ void Claude::insertionSort(double arr[], int n) {
 
 // 3. Merge Sort
 
-static void merge(double arr[], int l, int m, int r) {
+static void merge(float arr[], int l, int m, int r) {
     // Helper function for Merge Sort
     int i, j, k;
     int n1 = m - l + 1;
     int n2 = r - m;
     
     // Temporary arrays
-    double L[n1], R[n2];
+    float L[n1], R[n2];
     
     // Copy data to temporary arrays
     for (i = 0; i < n1; i++)
@@ -98,7 +98,7 @@ static void merge(double arr[], int l, int m, int r) {
     }
 }
 
-static void mergeSortHelper(double arr[], int l, int r) {
+static void mergeSortHelper(float arr[], int l, int r) {
     if (l < r) {
         // Find the middle point
         int m = l + (r - l) / 2;
@@ -111,11 +111,11 @@ static void mergeSortHelper(double arr[], int l, int r) {
     }
 }
 
-void Claude::mergeSort(double arr[], int n) {
+void Claude::mergeSort(float arr[], int n) {
     /* 
      * Merge Sort Algorithm
      * Input: 
-     *   - arr: Pointer to a double array to be sorted
+     *   - arr: Pointer to a float array to be sorted
      *   - n: Number of elements in the array
      * Behavior: Sorts array in-place in ascending order
      * Time Complexity: O(n log n)
@@ -127,30 +127,30 @@ void Claude::mergeSort(double arr[], int n) {
 
 // 4. Quick Sort
 
-static int partition(double arr[], int low, int high) {
+static int partition(float arr[], int low, int high) {
     // Helper function for Quick Sort
-    double pivot = arr[high];
+    float pivot = arr[high];
     int i = (low - 1);
     
     for (int j = low; j <= high - 1; j++) {
         if (arr[j] < pivot) {
             i++;
             // Swap elements
-            double temp = arr[i];
+            float temp = arr[i];
             arr[i] = arr[j];
             arr[j] = temp;
         }
     }
     
     // Swap pivot
-    double temp = arr[i + 1];
+    float temp = arr[i + 1];
     arr[i + 1] = arr[high];
     arr[high] = temp;
     
     return (i + 1);
 }
 
-static void quickSortHelper(double arr[], int low, int high) {
+static void quickSortHelper(float arr[], int low, int high) {
     if (low < high) {
         // Partition the array
         int pi = partition(arr, low, high);
@@ -161,11 +161,11 @@ static void quickSortHelper(double arr[], int low, int high) {
     }
 }
 
-void Claude::quickSort(double arr[], int n) {
+void Claude::quickSort(float arr[], int n) {
     /* 
      * Quick Sort Algorithm
      * Input: 
-     *   - arr: Pointer to a double array to be sorted
+     *   - arr: Pointer to a float array to be sorted
      *   - n: Number of elements in the array
      * Behavior: Sorts array in-place in ascending order
      * Time Complexity: O(n log n) average, O(n^2) worst case
@@ -177,7 +177,7 @@ void Claude::quickSort(double arr[], int n) {
 
 // 5. Heap Sort
 
-static void heapify(double arr[], int n, int i) {
+static void heapify(float arr[], int n, int i) {
     // Helper function for Heap Sort
     int largest = i;
     int left = 2 * i + 1;
@@ -193,7 +193,7 @@ static void heapify(double arr[], int n, int i) {
     
     // If largest is not root, swap and continue heapifying
     if (largest != i) {
-        double swap = arr[i];
+        float swap = arr[i];
         arr[i] = arr[largest];
         arr[largest] = swap;
         
@@ -201,11 +201,11 @@ static void heapify(double arr[], int n, int i) {
     }
 }
 
-void Claude::heapSort(double arr[], int n) {
+void Claude::heapSort(float arr[], int n) {
     /* 
      * Heap Sort Algorithm
      * Input: 
-     *   - arr: Pointer to a double array to be sorted
+     *   - arr: Pointer to a float array to be sorted
      *   - n: Number of elements in the array
      * Behavior: Sorts array in-place in ascending order
      * Time Complexity: O(n log n)
@@ -219,7 +219,7 @@ void Claude::heapSort(double arr[], int n) {
     // Extract elements from heap one by one
     for (int i = n - 1; i > 0; i--) {
         // Move current root to end
-        double temp = arr[0];
+        float temp = arr[0];
         arr[0] = arr[i];
         arr[i] = temp;
         
@@ -230,11 +230,11 @@ void Claude::heapSort(double arr[], int n) {
 
 // 6. Gnome Sort
 
-void Claude::gnomeSort(double arr[], int n) {
+void Claude::gnomeSort(float arr[], int n) {
     /* 
      * Gnome Sort Algorithm
      * Input: 
-     *   - arr: Pointer to a double array to be sorted
+     *   - arr: Pointer to a float array to be sorted
      *   - n: Number of elements in the array
      * Behavior: Sorts array in-place in ascending order
      * Time Complexity: O(n^2)
@@ -247,7 +247,7 @@ void Claude::gnomeSort(double arr[], int n) {
             index++;
         else {
             // Swap elements
-            double temp = arr[index];
+            float temp = arr[index];
             arr[index] = arr[index - 1];
             arr[index - 1] = temp;
             index--;
@@ -257,9 +257,9 @@ void Claude::gnomeSort(double arr[], int n) {
 
 // 7. Radix Sort (for positive doubles, limited precision)
 
-static void countingSort(double arr[], int n, int exp) {
+static void countingSort(float arr[], int n, int exp) {
     // Helper function for Radix Sort
-    double output[n];
+    float output[n];
     int count[10] = {0};
     
     // Store count of occurrences in count[]
@@ -283,11 +283,11 @@ static void countingSort(double arr[], int n, int exp) {
         arr[i] = output[i];
 }
 
-void Claude::radixSort(double arr[], int n) {
+void Claude::radixSort(float arr[], int n) {
     /* 
      * Radix Sort Algorithm (Integer-based)
      * Input: 
-     *   - arr: Pointer to a double array to be sorted
+     *   - arr: Pointer to a float array to be sorted
      *   - n: Number of elements in the array
      * Behavior: Sorts array in-place in ascending order
      * Time Complexity: O(d(n+k)), where d is number of digits
@@ -298,7 +298,7 @@ void Claude::radixSort(double arr[], int n) {
      *   - Converts doubles to integers
      */
     // Find the maximum number to know number of digits
-    double max = arr[0];
+    float max = arr[0];
     for (int i = 1; i < n; i++)
         if (arr[i] > max)
             max = arr[i];
@@ -310,11 +310,11 @@ void Claude::radixSort(double arr[], int n) {
 
 // 8. Shell Sort
 
-void Claude::shellSort(double arr[], int n) {
+void Claude::shellSort(float arr[], int n) {
     /* 
      * Shell Sort Algorithm
      * Input: 
-     *   - arr: Pointer to a double array to be sorted
+     *   - arr: Pointer to a float array to be sorted
      *   - n: Number of elements in the array
      * Behavior: Sorts array in-place in ascending order
      * Time Complexity: O(n log n) to O(n^2)
@@ -326,7 +326,7 @@ void Claude::shellSort(double arr[], int n) {
         // Do gapped insertion sort for this gap size
         for (int i = gap; i < n; i++) {
             // Save arr[i] in temp and make a hole at position i
-            double temp = arr[i];
+            float temp = arr[i];
             
             // Shift earlier gap-sorted elements up until the correct
             // location for arr[i] is found
@@ -342,11 +342,11 @@ void Claude::shellSort(double arr[], int n) {
 
 // 9. Comb Sort
 
-void Claude::combSort(double arr[], int n) {
+void Claude::combSort(float arr[], int n) {
     /* 
      * Comb Sort Algorithm
      * Input: 
-     *   - arr: Pointer to a double array to be sorted
+     *   - arr: Pointer to a float array to be sorted
      *   - n: Number of elements in the array
      * Behavior: Sorts array in-place in ascending order
      * Time Complexity: O(n log n)
@@ -369,7 +369,7 @@ void Claude::combSort(double arr[], int n) {
         for (int i = 0; i < n - gap; i++) {
             if (arr[i] > arr[i + gap]) {
                 // Swap elements
-                double temp = arr[i];
+                float temp = arr[i];
                 arr[i] = arr[i + gap];
                 arr[i + gap] = temp;
                 swapped = true;
@@ -380,11 +380,11 @@ void Claude::combSort(double arr[], int n) {
 
 // 10. Pancake Sort
 
-static void flip(double arr[], int k) {
+static void flip(float arr[], int k) {
     // Helper function to reverse first k elements
     int start = 0;
     while (start < k) {
-        double temp = arr[start];
+        float temp = arr[start];
         arr[start] = arr[k];
         arr[k] = temp;
         start++;
@@ -392,7 +392,7 @@ static void flip(double arr[], int k) {
     }
 }
 
-static int findMaxIndex(double arr[], int n) {
+static int findMaxIndex(float arr[], int n) {
     // Helper function to find index of maximum element
     int mi = 0;
     for (int i = 0; i < n; i++)
@@ -401,11 +401,11 @@ static int findMaxIndex(double arr[], int n) {
     return mi;
 }
 
-void Claude::pancakeSort(double arr[], int n) {
+void Claude::pancakeSort(float arr[], int n) {
     /* 
      * Pancake Sort Algorithm
      * Input: 
-     *   - arr: Pointer to a double array to be sorted
+     *   - arr: Pointer to a float array to be sorted
      *   - n: Number of elements in the array
      * Behavior: Sorts array in-place in ascending order
      * Time Complexity: O(n^2)

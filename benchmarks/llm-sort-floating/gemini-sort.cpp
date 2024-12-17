@@ -2,11 +2,11 @@
 
 // 1. Bubble Sort
 
-void Gemini::bubbleSort(double arr[], int n) {
+void Gemini::bubbleSort(float arr[], int n) {
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
-                double temp = arr[j];
+                float temp = arr[j];
                 arr[j] = arr[j + 1];
                 arr[j + 1] = temp;
             }
@@ -16,9 +16,9 @@ void Gemini::bubbleSort(double arr[], int n) {
 
 // 2. Insertion Sort
 
-void Gemini::insertionSort(double arr[], int n) {
+void Gemini::insertionSort(float arr[], int n) {
     for (int i = 1; i < n; ++i) {
-        double key = arr[i];
+        float key = arr[i];
         int j = i - 1;
 
         while (j >= 0 && arr[j] > key) {
@@ -31,12 +31,12 @@ void Gemini::insertionSort(double arr[], int n) {
 
 // 3. Merge Sort
 
-static void merge(double arr[], int left, int mid, int right) {
+static void merge(float arr[], int left, int mid, int right) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
 
     // Create temporary arrays
-    double L[n1], R[n2];
+    float L[n1], R[n2];
 
     // Copy data to temporary arrays L[] and R[]
     for (int i = 0; i < n1; i++)
@@ -72,7 +72,7 @@ static void merge(double arr[], int left, int mid, int right) {
     }
 }
 
-static void mergeSortHelper(double arr[], int left, int right) {
+static void mergeSortHelper(float arr[], int left, int right) {
     if (left < right) {
         // Find the middle point
         int mid = left + (right - left) / 2;
@@ -86,33 +86,33 @@ static void mergeSortHelper(double arr[], int left, int right) {
     }
 }
 
-void Gemini::mergeSort(double arr[], int n) {
+void Gemini::mergeSort(float arr[], int n) {
     mergeSortHelper(arr, 0, n - 1);
 }
 
 // 4. Quick Sort
 
-static int partition(double arr[], int low, int high) {
-    double pivot = arr[high];
+static int partition(float arr[], int low, int high) {
+    float pivot = arr[high];
     int i = (low - 1);
 
     for (int j = low; j < high; j++) {
         if (arr[j] <= pivot) {
             i++;
-            double temp = arr[i];
+            float temp = arr[i];
             arr[i] = arr[j];
             arr[j] = temp;
         }
     }
 
-    double temp = arr[i + 1];
+    float temp = arr[i + 1];
     arr[i + 1] = arr[high];
     arr[high] = temp;
 
     return i + 1;
 }
 
-static void quickSortHelper(double arr[], int low, int high) {
+static void quickSortHelper(float arr[], int low, int high) {
     if (low < high) {
         /* pi is partitioning index, arr[p] is now
            at right place */
@@ -125,14 +125,14 @@ static void quickSortHelper(double arr[], int low, int high) {
     }
 }
 
-void Gemini::quickSort(double arr[], int n) {
+void Gemini::quickSort(float arr[], int n) {
     quickSortHelper(arr, 0, n - 1);
 }
 
 
 // 5. Heap Sort
 
-static void heapify(double arr[], int n, int i) {
+static void heapify(float arr[], int n, int i) {
     int largest = i;
     int left = 2 * i + 1;
     int right = 2 * i + 2;
@@ -144,19 +144,19 @@ static void heapify(double arr[], int n, int i) {
         largest = right;
 
     if (largest != i) {
-        double temp = arr[i];
+        float temp = arr[i];
         arr[i] = arr[largest];
         arr[largest] = temp;
         heapify(arr, n, largest);
     }
 }
 
-void Gemini::heapSort(double arr[], int n) {
+void Gemini::heapSort(float arr[], int n) {
     for (int i = n / 2 - 1; i >= 0; i--)
         heapify(arr, n, i);
 
     for (int i = n - 1; i >= 0; i--) {
-        double temp = arr[0];
+        float temp = arr[0];
         arr[0] = arr[i];
         arr[i] = temp;
         heapify(arr, i, 0);
@@ -166,13 +166,13 @@ void Gemini::heapSort(double arr[], int n) {
 
 // 6. Gnome Sort
 
-void Gemini::gnomeSort(double arr[], int n) {
+void Gemini::gnomeSort(float arr[], int n) {
     int index = 0;
     while (index < n) {
         if (index == 0 || arr[index] >= arr[index - 1])
             index++;
         else {
-            double temp = arr[index];
+            float temp = arr[index];
             arr[index] = arr[index - 1];
             arr[index - 1] = temp;
             index--;
@@ -182,16 +182,16 @@ void Gemini::gnomeSort(double arr[], int n) {
 
 // 7. Radix Sort (couldn't implement for doubles)
 
-void Gemini::radixSort(double arr[], int n) {
+void Gemini::radixSort(float arr[], int n) {
     return;
 }
 
 // 8. Shell Sort
 
-void Gemini::shellSort(double arr[], int n) {
+void Gemini::shellSort(float arr[], int n) {
     for (int gap = n / 2; gap > 0; gap /= 2) {
         for (int i = gap; i < n; i += 1) {
-            double temp = arr[i];
+            float temp = arr[i];
             int j;
             for (j = i; j >= gap && arr[j - gap] > temp; j -= gap)
                 arr[j] = arr[j - gap];
@@ -202,7 +202,7 @@ void Gemini::shellSort(double arr[], int n) {
 
 // 9. Comb Sort
 
-void Gemini::combSort(double arr[], int n) {
+void Gemini::combSort(float arr[], int n) {
     int gap = n;
     bool swapped = true;
 
@@ -214,7 +214,7 @@ void Gemini::combSort(double arr[], int n) {
         swapped = false;
         for (int i = 0; i < n - gap; i++) {
             if (arr[i] > arr[i + gap]) {
-                double temp = arr[i];
+                float temp = arr[i];
                 arr[i] = arr[i + gap];
                 arr[i + gap] = temp;
                 swapped = true;
@@ -225,10 +225,10 @@ void Gemini::combSort(double arr[], int n) {
 
 // 10. Pancake Sort
 
-static void flip(double arr[], int i) {
+static void flip(float arr[], int i) {
     int start = 0;
     while (start < i) {
-        double temp = arr[start];
+        float temp = arr[start];
         arr[start] = arr[i];
         arr[i] = temp;
         start++;
@@ -236,7 +236,7 @@ static void flip(double arr[], int i) {
     }
 }
 
-static int findMax(double arr[], int n) {
+static int findMax(float arr[], int n) {
     int mi = 0;
     for (int i = 1; i < n; i++)
         if (arr[i] > arr[mi])
@@ -244,7 +244,7 @@ static int findMax(double arr[], int n) {
     return mi;
 }
 
-void Gemini::pancakeSort(double arr[], int n) {
+void Gemini::pancakeSort(float arr[], int n) {
     for (int curr_size = n; curr_size > 1; --curr_size) {
         int mi = findMax(arr, curr_size);
 
