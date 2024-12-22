@@ -8,7 +8,7 @@
 #include "claude-sort.h"
 #include "gemini-sort.h"
 
-const int EXPERIMENT_REPETITION = 1;
+const int EXPERIMENT_REPETITION = 3;
 const int EXPERIMENT_DELAY = 2000;
 const int ALGORITHM_DELAY = 1500;
 const bool SORT_VERIFICATION = false;

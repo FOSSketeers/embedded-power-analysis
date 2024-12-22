@@ -12,7 +12,7 @@
 
 const bool CHECK_CORRECTNESS = false;
 static_assert(!CHECK_CORRECTNESS || SERIAL_OUTPUT, "Correctness check is meaningless without serial output.");
-const int EXPERIMENT_REPETITION = 1;
+const int EXPERIMENT_REPETITION = 3;
 const int EXPERIMENT_DELAY = 2000;
 const int ALGORITHM_DELAY = 1500;
 
