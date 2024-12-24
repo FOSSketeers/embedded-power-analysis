@@ -1,373 +1,141 @@
-//#include <SoftwareSerial.h>
 #include <Arduino.h>
-#include <stdint.h>
 
-// int rx = 10;
-// int tx = 11;
-//SoftwareSerial sserial(rx, tx);
-#define sserial Serial
+#include <util.h>
 
-const int ARRAY_SIZE = 300;
-const int INTERVAL = 1000;
+// Change the array type in arr_t.h
+#include "arr_t.h";
+#include "sortlib.h";
 
-#define arr_t uint16_t
+const int EXPERIMENT_REPETITION = 3;
+const int EXPERIMENT_DELAY = 1500;
+const int ALGORITHM_DELAY = 1000;
+const bool SORT_VERIFICATION = false;
 
-// Test arrays
-arr_t array[ARRAY_SIZE];
-arr_t temp[ARRAY_SIZE];  // For merge sort
+// Taken from random_array_generator.py
+arr_t arr[100] = { -107, -105, -261, 278, -14, -59, 267, -7, 82, -209, 133, 189, 93, -53, 57, 79, 133, 30, 125, -299, 250, 265, 198, -57, -262, -216, 27, -286, -17, -207, 34, -136, 252, 23, -97, 201, 260, -197, 259, 81, -133, 208, 169, 81, 211, 138, 21, 161, 223, -53, -227, 300, -252, 277, 27, 34, 67, -29, 296, -247, -203, -116, -217, 6, 273, 90, -178, 226, -172, 82, 220, 122, 119, -134, 268, -188, -213, 257, 220, -154, 89, -241, 65, -254, -56, 225, -230, -34, 205, -162, 154, 148, 208, -287, 8, 134, 280, 39, 293, 131 };
+int arr_length = sizeof(arr) / sizeof(arr[0]);
+arr_t arr_copy[100];
 
-void pinOutput(int x) {
-    bool d8 = x & (1 << 0);
-    bool d9 = x & (1 << 1);
-    bool d10 = x & (1 << 2);
-    bool d11 = x & (1 << 3);
-
-    digitalWrite(8, d8);
-    digitalWrite(9, d9);
-    digitalWrite(10, d10);
-    digitalWrite(11, d11);
-}
-
-// Function to initialize the array with random values
 void initializeArray() {
-    unsigned int r = random(1, 10000);
-    for (int i = 0; i < ARRAY_SIZE; i++) {
-        array[i] = r & 1023;  // Random numbers between 0 and 9999
-        r *= 31;
-        r += 79;
-        r >>= 3;
-        if (!r) r = random(1, 10000);
-        // Serial.print(array[i]);
-        // Serial.print(" - ");
+    for (int i = 0; i < arr_length; i++) {
+        arr_copy[i] = arr[i];
     }
-    // Serial.println();
 }
 
-// Bubble Sort
-void bubbleSort(arr_t arr[], int size) {
-    for (int i = 0; i < size - 1; i++) {
-        for (int j = 0; j < size - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                arr_t temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
-            }
+bool verifySorting(arr_t arr[]) {
+    for (int i = 0; i < arr_length - 1; i++) {
+        if (arr[i] > arr[i + 1]) {
+            if constexpr (SERIAL_OUTPUT)
+                Serial.println("VERIF_FAIL: Array is not sorted!");
+            return false;
         }
     }
+    return true;
 }
 
-// Insertion Sort
-void insertionSort(arr_t arr[], int size) {
-    for (int i = 1; i < size; i++) {
-        arr_t key = arr[i];
-        int j = i - 1;
-        while (j >= 0 && arr[j] > key) {
-            arr[j + 1] = arr[j];
-            j--;
-        }
-        arr[j + 1] = key;
-    }
-}
-
-// Merge Sort
-void merge(arr_t arr[], int left, int mid, int right) {
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
-
-    // Create temp arrays
-    for (int i = 0; i < n1; i++) temp[i] = arr[left + i];
-    for (int i = 0; i < n2; i++) temp[n1 + i] = arr[mid + 1 + i];
-
-    int i = 0, j = 0, k = left;
-    while (i < n1 && j < n2) {
-        if (temp[i] <= temp[n1 + j]) {
-            arr[k++] = temp[i++];
-        } else {
-            arr[k++] = temp[n1 + j++];
-        }
-    }
-
-    while (i < n1) arr[k++] = temp[i++];
-    while (j < n2) arr[k++] = temp[n1 + j++];
-}
-
-void mergeSort(arr_t arr[], int left, int right) {
-    if (left < right) {
-        int mid = left + (right - left) / 2;
-        mergeSort(arr, left, mid);
-        mergeSort(arr, mid + 1, right);
-        merge(arr, left, mid, right);
-    }
-}
-
-// Quick Sort
-int partition(arr_t arr[], int low, int high) {
-    arr_t pivot = arr[high];
-    int i = low - 1;
-    for (int j = low; j < high; j++) {
-        if (arr[j] < pivot) {
-            i++;
-            arr_t temp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = temp;
-        }
-    }
-    arr_t temp = arr[i + 1];
-    arr[i + 1] = arr[high];
-    arr[high] = temp;
-    return i + 1;
-}
-
-void quickSort(arr_t arr[], int low, int high) {
-    if (low < high) {
-        int pi = partition(arr, low, high);
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
-    }
-}
-
-// Heap Sort
-void heapify(arr_t arr[], int size, int root) {
-    int largest = root;
-    int left = 2 * root + 1;
-    int right = 2 * root + 2;
-
-    if (left < size && arr[left] > arr[largest]) largest = left;
-    if (right < size && arr[right] > arr[largest]) largest = right;
-
-    if (largest != root) {
-        arr_t temp = arr[root];
-        arr[root] = arr[largest];
-        arr[largest] = temp;
-        heapify(arr, size, largest);
-    }
-}
-
-void heapSort(arr_t arr[], int size) {
-    for (int i = size / 2 - 1; i >= 0; i--) heapify(arr, size, i);
-    for (int i = size - 1; i > 0; i--) {
-        arr_t temp = arr[0];
-        arr[0] = arr[i];
-        arr[i] = temp;
-        heapify(arr, i, 0);
-    }
-}
-
-// Gnome Sort
-void gnomeSort(arr_t arr[], int size) {
-    int index = 0;
-    while (index < size) {
-        if (index == 0 || arr[index] >= arr[index - 1]) {
-            index++;
-        } else {
-            arr_t temp = arr[index];
-            arr[index] = arr[index - 1];
-            arr[index - 1] = temp;
-            index--;
-        }
-    }
-}
-
-// Radix Sort
-void countSortForRadix(arr_t arr[], int size, int exp) {
-    arr_t output[size];
-    int count[10] = { 0 };
-
-    for (int i = 0; i < size; i++) count[(arr[i] / exp) % 10]++;
-    for (int i = 1; i < 10; i++) count[i] += count[i - 1];
-    for (int i = size - 1; i >= 0; i--) {
-        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
-        count[(arr[i] / exp) % 10]--;
-    }
-    for (int i = 0; i < size; i++) arr[i] = output[i];
-}
-
-void radixSort(arr_t arr[], int size) {
-    arr_t max = arr[0];
-    for (int i = 1; i < size; i++)
-        if (arr[i] > max) max = arr[i];
-    for (int exp = 1; max / exp > 0; exp *= 10) countSortForRadix(arr, size, exp);
-}
-
-// Shell Sort
-void shellSort(arr_t arr[], int size) {
-    for (int gap = size / 2; gap > 0; gap /= 2) {
-        for (int i = gap; i < size; i++) {
-            arr_t temp = arr[i];
-            int j;
-            for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
-                arr[j] = arr[j - gap];
-            }
-            arr[j] = temp;
-        }
-    }
-}
-
-// Comb Sort
-void combSort(arr_t arr[], int size) {
-    int gap = size;
-    bool swapped = true;
-    while (gap != 1 || swapped) {
-        gap = (gap * 10) / 13;
-        if (gap < 1) gap = 1;
-        swapped = false;
-        for (int i = 0; i < size - gap; i++) {
-            if (arr[i] > arr[i + gap]) {
-                arr_t temp = arr[i];
-                arr[i] = arr[i + gap];
-                arr[i + gap] = temp;
-                swapped = true;
-            }
-        }
-    }
-}
-
-// Pancake Sort
-int findMax(arr_t arr[], int size) {
-    int maxIdx = 0;
-    for (int i = 1; i < size; i++) {
-        if (arr[i] > arr[maxIdx]) maxIdx = i;
-    }
-    return maxIdx;
-}
-
-void flip(arr_t arr[], int size) {
-    for (int i = 0; i < size / 2; i++) {
-        arr_t temp = arr[i];
-        arr[i] = arr[size - i - 1];
-        arr[size - i - 1] = temp;
-    }
-}
-
-void pancakeSort(arr_t arr[], int size) {
-    for (int currSize = size; currSize > 1; currSize--) {
-        int maxIdx = findMax(arr, currSize);
-        if (maxIdx != currSize - 1) {
-            flip(arr, maxIdx + 1);
-            flip(arr, currSize);
-        }
-    }
-}
-
-
-// Benchmark function
 void runBenchmark() {
-    sserial.println("Starting benchmark...");
-    pinOutput(0);
+    if constexpr (SERIAL_OUTPUT)
+        Serial.println("Starting benchmark...");
+    setState(0, "idle");
 
-    // Bubble Sort
     initializeArray();
-    pinOutput(1);
-    sserial.println("Running Bubble Sort...");
-    bubbleSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 1000 ms");
-    pinOutput(0);
-    delay(INTERVAL);
+    setState(1, "bubblesort");
+    bubbleSort(arr_copy, arr_length);
+    setState(0, "idle");
+    if (SORT_VERIFICATION)
+        verifySorting(arr_copy);
+    delay(ALGORITHM_DELAY);
 
-
-    // Insertion Sort
     initializeArray();
-    pinOutput(2);
-    sserial.println("Running Insertion Sort...");
-    insertionSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 1000 ms");
-    pinOutput(0);
-    delay(INTERVAL);
+    setState(2, "insertionsort");
+    insertionSort(arr_copy, arr_length);
+    setState(0, "idle");
+    if (SORT_VERIFICATION)
+        verifySorting(arr_copy);
+    delay(ALGORITHM_DELAY);
 
-    // Merge Sort
     initializeArray();
-    pinOutput(3);
-    sserial.println("Running Merge Sort...");
-    mergeSort(array, 0, ARRAY_SIZE - 1);
-    sserial.println("Sleeping for 1000 ms");
-    pinOutput(0);
-    delay(INTERVAL);
+    setState(3, "mergesort");
+    mergeSort(arr_copy, arr_length);
+    setState(0, "idle");
+    if (SORT_VERIFICATION)
+        verifySorting(arr_copy);
+    delay(ALGORITHM_DELAY);
 
-    // Quick Sort
     initializeArray();
-    pinOutput(4);
-    sserial.println("Running Quick Sort...");
-    quickSort(array, 0, ARRAY_SIZE - 1);
-    sserial.println("Sleeping for 1000 ms");
-    pinOutput(0);
-    delay(INTERVAL);
+    setState(4, "quicksort");
+    quickSort(arr_copy, arr_length);
+    setState(0, "idle");
+    if (SORT_VERIFICATION)
+        verifySorting(arr_copy);
+    delay(ALGORITHM_DELAY);
 
-    // Heap Sort
     initializeArray();
-    pinOutput(5);
-    sserial.println("Running Heap Sort...");
-    heapSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 1000 ms");
-    pinOutput(0);
-    delay(INTERVAL);
+    setState(5, "heapsort");
+    heapSort(arr_copy, arr_length);
+    setState(0, "idle");
+    if (SORT_VERIFICATION)
+        verifySorting(arr_copy);
+    delay(ALGORITHM_DELAY);
 
-    // Gnome Sort
     initializeArray();
-    pinOutput(6);
-    sserial.println("Running Gnome Sort...");
-    gnomeSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 1000 ms");
-    pinOutput(0);
-    delay(INTERVAL);
+    setState(6, "gnomesort");
+    gnomeSort(arr_copy, arr_length);
+    setState(0, "idle");
+    if (SORT_VERIFICATION)
+        verifySorting(arr_copy);
+    delay(ALGORITHM_DELAY);
 
-    // Radix Sort
     initializeArray();
-    pinOutput(7);
-    sserial.println("Running Radix Sort...");
-    radixSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 1000 ms");
-    pinOutput(0);
-    delay(INTERVAL);
+    setState(7, "radixsort");
+    radixSort(arr_copy, arr_length);
+    setState(0, "idle");
+    if (SORT_VERIFICATION)
+        verifySorting(arr_copy);
+    delay(ALGORITHM_DELAY);
 
-    // Shell Sort
     initializeArray();
-    pinOutput(8);
-    sserial.println("Running Shell Sort...");
-    shellSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 1000 ms");
-    pinOutput(0);
-    delay(INTERVAL);
+    setState(8, "shellsort");
+    shellSort(arr_copy, arr_length);
+    setState(0, "idle");
+    if (SORT_VERIFICATION)
+        verifySorting(arr_copy);
+    delay(ALGORITHM_DELAY);
 
-    // Comb Sort
     initializeArray();
-    pinOutput(9);
-    sserial.println("Running Comb Sort...");
-    combSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 1000 ms");
-    pinOutput(0);
-    delay(INTERVAL);
+    setState(9, "combsort");
+    combSort(arr_copy, arr_length);
+    setState(0, "idle");
+    if (SORT_VERIFICATION)
+        verifySorting(arr_copy);
+    delay(ALGORITHM_DELAY);
 
-    // Pancake Sort
     initializeArray();
-    pinOutput(10);
-    sserial.println("Running Pancake Sort...");
-    pancakeSort(array, ARRAY_SIZE);
-    sserial.println("Sleeping for 1000 ms");
-    pinOutput(0);
-    delay(INTERVAL);
+    setState(10, "pancakesort");
+    pancakeSort(arr_copy, arr_length);
+    setState(0, "idle");
+    if (SORT_VERIFICATION)
+        verifySorting(arr_copy);
+    delay(ALGORITHM_DELAY);
 
-    sserial.println("Benchmark complete!");
+    if constexpr (SERIAL_OUTPUT)
+        Serial.println("Benchmark complete!");
 }
 
 void setup() {
-    // pinMode(rx, INPUT);
-    // pinMode(tx, OUTPUT);
-    pinMode(8, OUTPUT);
-    pinMode(9, OUTPUT);
-    pinMode(10, OUTPUT);
-    pinMode(11, OUTPUT);
-    sserial.begin(9600);
-    // Serial.begin(115200);
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, LOW);
 
-    for (int i = 0; i < 5; i++) {
-        delay(2000);
+    _CommonInitializer();
+    for (int i = 0; i < EXPERIMENT_REPETITION; i++) {
+        delay(EXPERIMENT_DELAY);
         runBenchmark();
     }
-    pinOutput(15);
-    pinMode(LED_BUILTIN, OUTPUT);
+
+    setState(255, "finish");
     digitalWrite(LED_BUILTIN, HIGH);
 }
 
 void loop() {
-    // Do nothing
+    // put your main code here, to run repeatedly:
 }
