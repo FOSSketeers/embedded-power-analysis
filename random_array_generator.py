@@ -25,7 +25,7 @@ def generate_random_array(array_size, number_range, data_type, precision, sortin
 
     # Generate random array based on the data type
     if data_type == "int":
-        random_array = [random.randint(min_val, max_val) for _ in range(array_size)]
+        random_array = [random.randint(int(min_val), int(max_val)) for _ in range(array_size)]
     elif data_type == "double":
         random_array = [round(random.uniform(min_val, max_val), precision) for _ in range(array_size)]
     else:
