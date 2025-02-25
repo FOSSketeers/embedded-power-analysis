@@ -69,6 +69,14 @@ def process_data(data: pd.DataFrame, benchmark_type: Benchmarks) -> tuple[pd.Ser
     return total_usages, timings, efficiency
 
 
+def process_data_fft(data: pd.DataFrame, benchmark_type: Benchmarks) -> pd.Series:
+    benchmark_mappings = dict(enumerate(STATE_TITLES[benchmark_type]))
+
+    level_group = data.loc[~data["D0-D7"].isin((0, 1))].groupby("D0-D7")
+
+    return level_group["Current(uA)"].apply(lambda lg: abs(np.fft.fft(lg))).rename(index=benchmark_mappings)
+
+
 def hue(data: pd.Series, hue_mode: str) -> pd.Series | pd.Index | None:
     if hue_mode == "y":
         return data
@@ -88,46 +96,56 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument('files', action='extend', nargs='+')
     parser.add_argument('--hue', default="y")
+    parser.add_argument('--mode', choices=['stats', 'fft'], default='stats')
     args = parser.parse_args()
 
     # assuming the files are from the same benchmark type
-    benchmark_type = Benchmarks.LLMSORT if "llmsort" in args.files[0] else Benchmarks.CRYPTO
+    benchmark_type = Benchmarks.CRYPTO if "crypto" in args.files[0] else Benchmarks.LLMSORT
 
     with ThreadPoolExecutor() as executor:
         with benchmark("Load CSV"):
             datas.extend(executor.map(load_data, args.files))
 
         with benchmark("Process data"):
-            processed_datas.extend(executor.map(partial(process_data, benchmark_type=benchmark_type), datas))
+            processed_datas.extend(executor.map(partial(process_data if args.mode == 'stats' else process_data_fft, benchmark_type=benchmark_type), datas))
 
     with benchmark("Plot"):
-        fig, axs = plt.subplots(nrows=3, ncols=len(args.files), squeeze=False, sharex="all", sharey="row")
+        if args.mode == 'stats':
+            fig, axs = plt.subplots(nrows=3, ncols=len(args.files), squeeze=False, sharex="all", sharey="row")
 
-        for (column, file), processed_data in zip(enumerate(args.files), processed_datas):
-            total_usages, timings, efficiency = processed_data
+            for (column, file), processed_data in zip(enumerate(args.files), processed_datas):
+                total_usages, timings, efficiency = processed_data
 
-            print("######### {file} #########")
-            datas[column].info()
-            print("===== ENERGY USAGES =====")
-            print(total_usages.sort_values())
-            print("===== TIMINGS =====")
-            print(timings.sort_values())
-            print("===== ENERGY EFFICIENCY =====")
-            print(efficiency.sort_values())
+                print("######### {file} #########")
+                datas[column].info()
+                print("===== ENERGY USAGES =====")
+                print(total_usages.sort_values())
+                print("===== TIMINGS =====")
+                print(timings.sort_values())
+                print("===== ENERGY EFFICIENCY =====")
+                print(efficiency.sort_values())
 
-            consumption_plot = sns.barplot(x=total_usages.index.rename("States"), y=total_usages.rename("Watt-hours"), hue=hue(total_usages.rename("Watt-hours"), args.hue), ax=axs[0, column])
-            consumption_plot.set_ylim(0, 0.1 * 10 ** -5)
-            consumption_plot.set_title(f"Total Energy Consumption - {file}")
-            consumption_plot.tick_params(axis='x', rotation=75)
+                consumption_plot = sns.barplot(x=total_usages.index.rename("States"), y=total_usages.rename("Watt-hours"), hue=hue(total_usages.rename("Watt-hours"), args.hue), ax=axs[0, column])
+                consumption_plot.set_ylim(0, 0.1 * 10 ** -5)
+                consumption_plot.set_title(f"Total Energy Consumption - {file}")
+                consumption_plot.tick_params(axis='x', rotation=75)
 
-            time_plot = sns.barplot(x=timings.index.rename("States"), y=timings.rename("Microseconds"), hue=hue(timings.rename("Microseconds"), args.hue), ax=axs[1, column])
-            time_plot.set_ylim(0, 30)
-            time_plot.set_title(f"Total Time Spent - {file}")
-            time_plot.tick_params(axis='x', rotation=75)
+                time_plot = sns.barplot(x=timings.index.rename("States"), y=timings.rename("Microseconds"), hue=hue(timings.rename("Microseconds"), args.hue), ax=axs[1, column])
+                time_plot.set_ylim(0, 30)
+                time_plot.set_title(f"Total Time Spent - {file}")
+                time_plot.tick_params(axis='x', rotation=75)
 
-            efficiency_plot = sns.barplot(x=efficiency.index.rename("States"), y=efficiency.rename("Watt-hour per ms"), hue=hue(efficiency.rename("Watt-hour per ms"), args.hue), ax=axs[2, column])
-            efficiency_plot.set_title(f"Efficiency - {file}")
-            efficiency_plot.tick_params(axis='x', rotation=75)
+                efficiency_plot = sns.barplot(x=efficiency.index.rename("States"), y=efficiency.rename("Watt-hour per ms"), hue=hue(efficiency.rename("Watt-hour per ms"), args.hue), ax=axs[2, column])
+                efficiency_plot.set_title(f"Efficiency - {file}")
+                efficiency_plot.tick_params(axis='x', rotation=75)
+        elif args.mode == 'fft':
+            fig, axs = plt.subplots(nrows=max(map(len, processed_datas)), ncols=len(args.files), squeeze=False)
+            plt.subplots_adjust(hspace=1.0, bottom=0.05, top=0.95)
+
+            for (column, file), processed_data in zip(enumerate(args.files), processed_datas):
+                for row, state in enumerate(processed_data):
+                    plot = sns.lineplot(data=state, ax=axs[row, column])
+                    plot.set_title(f"{processed_data.index[row]} - {file}")
 
     print("batashow")
     plt.show()
