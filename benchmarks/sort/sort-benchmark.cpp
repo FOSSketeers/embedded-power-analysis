@@ -12,7 +12,7 @@ const int ALGORITHM_DELAY = 500;
 const bool SORT_VERIFICATION = false;
 
 // Taken from random_array_generator.py
-arr_t arr[16] = { -176, 246, 47, 274, -237, 212, -23, 248, 158, 96, 43, 139, 167, 16, -241, 233 };
+arr_t arr[32] = { -125, 239, -206, -269, -16, 124, -48, -24, 244, -224, -54, 67, -154, -294, 68, 8, -41, -58, -178, -174, 235, 288, 158, 37, -17, -199, -157, 268, 132, 236, -111, 192 };
 int arr_length = sizeof(arr) / sizeof(arr[0]);
 arr_t arr_copy[100];
 
