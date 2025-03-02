@@ -12,12 +12,14 @@ We experiment different sorting algorithms with different arrays in different de
 
 #### Experiment Log
 
-| Date | Device | Commit Hash | Array Size | Array Type | Array Characteristics | Circuit | Measurement |
-| ---- | ------ | ------------ | ---------- | ---------- | ---------- | ------- | ----------- |
-| 2024-11-18 | Uno R3 (clone) | [d9e1f62](https://github.com/div72/bbm479/commit/d9e1f629729e626ce25a95ed244edd289c76b294) | 300 | `int[]` with only non-negative numbers | Generated before each algo, pseudo-random | [circuit 000](/circuits/000.png) | [r3-sort-300-digitalout-5runs.csv.xz](/measurements/old-broken-state-transitions/r3-sort-300-digitalout-5runs.csv.xz) |
-| 2024-11-18 | Uno R4 Minima (clone) | [9acfcf9](https://github.com/div72/bbm479/commit/9acfcf9bb049b7724b56dbb1016f7749e48f11f6) | 300 | `int[]` with only non-negative numbers | Generated before each algo, pseudo-random | [circuit 001](/circuits/001.png) | [r4-sort-300-digitalout-5runs.csv.xz](/measurements/old-broken-state-transitions/r4-sort-300-digitalout-5runs.csv.xz) |
-|      |        |              |            |            |         |             | |
-
+| Date       | Device                | Commit                                                                                                            | Array Size | Array Type                                 | Circuit                          | Measurement                                                                                                           |
+| ---------- | --------------------- | ----------------------------------------------------------------------------------------------------------------- | ---------- | ------------------------------------------ | -------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| 2024-11-18 | Uno R3 (clone)        | [d9e1f62](https://github.com/FOSSketeers/embedded-power-analysis/commit/d9e1f629729e626ce25a95ed244edd289c76b294) | 300        | Generated before each algo, pseudo-random  | [circuit 000](/circuits/000.png) | [r3-sort-300-digitalout-5runs.csv.xz](/measurements/old-broken-state-transitions/r3-sort-300-digitalout-5runs.csv.xz) |
+| 2024-11-18 | Uno R4 Minima (clone) | [9acfcf9](https://github.com/FOSSketeers/embedded-power-analysis/commit/9acfcf9bb049b7724b56dbb1016f7749e48f11f6) | 300        | Generated before each algo, pseudo-random  | [circuit 001](/circuits/001.png) | [r3-sort-300-digitalout-5runs.csv.xz](/measurements/old-broken-state-transitions/r3-sort-300-digitalout-5runs.csv.xz) |
+| 2025-03-03 | Uno R3 (clone)        | [98cc0d4](https://github.com/FOSSketeers/embedded-power-analysis/commit/98cc0d4d02d5156a44480c939fc15899bc84f026) | 16         | \`int[]\` with numbers between [-300, 300] | [circuit 002](/circuits/002.png) | [r3-sort-predefined-int-16-3runs.csv.xz](/measurements/r3-sort-predefined-int-16-3runs.csv.xz)                        |
+| 2025-03-03 | Uno R3 (clone)        | [2b31e7b](https://github.com/FOSSketeers/embedded-power-analysis/commit/2b31e7be7bc880ce86148b6125a5edb6f9a560ce) | 32         | \`int[]\` with numbers between [-300, 300] | [circuit 002](/circuits/002.png) | [r3-sort-predefined-int-32-3runs.csv.xz](/measurements/r3-sort-predefined-int-32-3runs.csv.xz)                        |
+| 2025-03-03 | Uno R3 (clone)        | [feba46b](https://github.com/FOSSketeers/embedded-power-analysis/commit/feba46bbaaee44cb5df21b46662e3c70d02d1a4b) | 64         | \`int[]\` with numbers between [-300, 300] | [circuit 002](/circuits/002.png) | [r3-sort-predefined-int-64-3runs.csv.xz](/measurements/r3-sort-predefined-int-64-3runs.csv.xz)                        |
+| 2025-03-03 | Uno R3 (clone)        | [eddf957](https://github.com/FOSSketeers/embedded-power-analysis/commit/eddf957ffa00640368fd5a221412312d12aa938e) | 128        | \`int[]\` with numbers between [-300, 300] | [circuit 002](/circuits/002.png) | [r3-sort-predefined-int-128-3runs.csv.xz](/measurements/r3-sort-predefined-int-128-3runs.csv.xz)                      |
 
 ### 2. crypto
 
