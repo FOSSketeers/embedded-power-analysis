@@ -10,8 +10,8 @@
 
 constexpr static int32_t LOOP_COUNT = 10000;
 const int EXPERIMENT_REPETITION = 10;
-const int EXPERIMENT_DELAY = 2000;
-const int ALGORITHM_DELAY = 1500;
+const int EXPERIMENT_DELAY = 1000;
+const int ALGORITHM_DELAY = 500;
 
 // Force values to not be optimized.
 extern volatile int32_t sink = 0;

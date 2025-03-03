@@ -13,8 +13,8 @@
 const bool CHECK_CORRECTNESS = false;
 static_assert(!CHECK_CORRECTNESS || SERIAL_OUTPUT, "Correctness check is meaningless without serial output.");
 const int EXPERIMENT_REPETITION = 3;
-const int EXPERIMENT_DELAY = 2000;
-const int ALGORITHM_DELAY = 1500;
+const int EXPERIMENT_DELAY = 1000;
+const int ALGORITHM_DELAY = 500;
 
 const uint8_t message[32] = "Lorem ipsum dolor sit amet, con";                                                                                                                                                                  // -1 for NUL terminator
 const uint8_t key128[16] = { 0xac, 0x9f, 0xc8, 0x33, 0xc9, 0x6e, 0x73, 0x47, 0xf2, 0xb1, 0xda, 0xe8, 0x32, 0xae, 0x54, 0x79 };                                                                                                  // first 16 bytes of sha256("symmetric")
