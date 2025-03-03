@@ -46,7 +46,7 @@ void runBenchmark() {
         setState(3, "search_linear");
         #pragma GCC unroll 4
         for (int i = 0; i < LOOP_COUNT; ++i) {
-            sink = lcg_rand();
+            sink = linear_search(arr, 100, arr[lcg_rand() % 100]);
         }
         setState(0, "idle");
         delay(ALGORITHM_DELAY);
