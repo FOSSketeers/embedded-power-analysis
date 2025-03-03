@@ -119,7 +119,7 @@ void runBenchmark() {
     #pragma GCC unroll 4
     setState(9, "fibonacci_recursive");
     for (int i = 0; i < LOOP_COUNT; ++i) {
-        sink = fibonacci_recursive(abs(lcg_rand()) % 100);
+        sink = fibonacci_recursive(abs(lcg_rand()) % 10);
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -128,7 +128,7 @@ void runBenchmark() {
     #pragma GCC unroll 4
     setState(10, "fibonacci_iterative");
     for (int i = 0; i < LOOP_COUNT; ++i) {
-        sink = fibonacci_iterative(abs(lcg_rand()) % 100);
+        sink = fibonacci_iterative(abs(lcg_rand()) % 10);
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
