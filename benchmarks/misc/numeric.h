@@ -1,4 +1,4 @@
-int binaryGCD(int a, int b) {
+unsigned int binaryGCD(unsigned int a, unsigned int b) {
     if (a == b) return a;
     if (a == 0) return b;
     if (b == 0) return a;
