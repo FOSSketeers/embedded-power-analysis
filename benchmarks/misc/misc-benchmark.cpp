@@ -46,7 +46,7 @@ void runBenchmark() {
         setState(3, "search_linear");
         #pragma GCC unroll 4
         for (int i = 0; i < LOOP_COUNT; ++i) {
-            sink = linear_search(arr, 100, arr[lcg_rand() % 100]);
+            sink = linear_search(arr, 100, arr[abs(lcg_rand()) % 100]);
         }
         setState(0, "idle");
         delay(ALGORITHM_DELAY);
@@ -54,7 +54,7 @@ void runBenchmark() {
         setState(4, "search_binary");
         #pragma GCC unroll 4
         for (int i = 0; i < LOOP_COUNT; ++i) {
-            sink = binary_search(arr, 100, arr[lcg_rand() % 100]);
+            sink = binary_search(arr, 100, arr[abs(lcg_rand()) % 100]);
         }
         setState(0, "idle");
         delay(ALGORITHM_DELAY);
@@ -86,7 +86,7 @@ void runBenchmark() {
         lcg_init(0xdeadbeef);
         for (int i = 0; i < DIJKSTRA_MAX_NODES; ++i) {
             for (int j = 0; j < DIJKSTRA_MAX_NODES; ++j) {
-                graph[i][j] = lcg_rand() % DIJKSTRA_INF;
+                graph[i][j] = abs(lcg_rand()) % DIJKSTRA_INF;
             }
         }
 
