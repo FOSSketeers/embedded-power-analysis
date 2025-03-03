@@ -116,8 +116,8 @@ void runBenchmark() {
     delay(ALGORITHM_DELAY);
 
     lcg_init(0xdeadbeef);
-    #pragma GCC unroll 4
     setState(9, "fibonacci_recursive");
+    #pragma GCC unroll 4
     for (int i = 0; i < LOOP_COUNT; ++i) {
         sink = fibonacci_recursive(abs(lcg_rand()) % 10);
     }
@@ -125,8 +125,8 @@ void runBenchmark() {
     delay(ALGORITHM_DELAY);
 
     lcg_init(0xdeadbeef);
-    #pragma GCC unroll 4
     setState(10, "fibonacci_iterative");
+    #pragma GCC unroll 4
     for (int i = 0; i < LOOP_COUNT; ++i) {
         sink = fibonacci_iterative(abs(lcg_rand()) % 10);
     }
@@ -134,8 +134,8 @@ void runBenchmark() {
     delay(ALGORITHM_DELAY);
 
     lcg_init(0xdeadbeef);
-    #pragma GCC unroll 4
     setState(11, "factorial_recursive");
+    #pragma GCC unroll 4
     for (int i = 0; i < LOOP_COUNT; ++i) {
         sink = factorial_recursive(abs(lcg_rand()) % 9);
     }
@@ -143,8 +143,8 @@ void runBenchmark() {
     delay(ALGORITHM_DELAY);
 
     lcg_init(0xdeadbeef);
-    #pragma GCC unroll 4
     setState(12, "factorial_iterative");
+    #pragma GCC unroll 4
     for (int i = 0; i < LOOP_COUNT; ++i) {
         sink = factorial_iterative(abs(lcg_rand()) % 9);
     }
