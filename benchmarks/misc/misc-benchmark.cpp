@@ -102,7 +102,7 @@ void runBenchmark() {
     setState(7, "gcd");
     #pragma GCC unroll 4
     for (int i = 0; i < LOOP_COUNT; ++i) {
-        sink = binaryGCD(lcg_rand(), lcg_rand());
+        sink = binaryGCD(abs(lcg_rand()), abs(lcg_rand()));
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -110,7 +110,7 @@ void runBenchmark() {
     lcg_init(0xdeadbeef);
     setState(8, "karatsuba");
     for (int i = 0; i < LOOP_COUNT; ++i) {
-        sink = karatsuba(lcg_rand(), lcg_rand());
+        sink = karatsuba(abs(lcg_rand()), abs(lcg_rand()));
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -119,7 +119,7 @@ void runBenchmark() {
     #pragma GCC unroll 4
     setState(9, "fibonacci_recursive");
     for (int i = 0; i < LOOP_COUNT; ++i) {
-        sink = fibonacci_recursive(lcg_rand() % 100);
+        sink = fibonacci_recursive(abs(lcg_rand()) % 100);
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -128,7 +128,7 @@ void runBenchmark() {
     #pragma GCC unroll 4
     setState(10, "fibonacci_iterative");
     for (int i = 0; i < LOOP_COUNT; ++i) {
-        sink = fibonacci_iterative(lcg_rand() % 100);
+        sink = fibonacci_iterative(abs(lcg_rand()) % 100);
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -137,7 +137,7 @@ void runBenchmark() {
     #pragma GCC unroll 4
     setState(11, "factorial_recursive");
     for (int i = 0; i < LOOP_COUNT; ++i) {
-        sink = factorial_recursive(lcg_rand() % 9);
+        sink = factorial_recursive(abs(lcg_rand()) % 9);
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -146,7 +146,7 @@ void runBenchmark() {
     #pragma GCC unroll 4
     setState(12, "factorial_iterative");
     for (int i = 0; i < LOOP_COUNT; ++i) {
-        sink = factorial_iterative(lcg_rand() % 9);
+        sink = factorial_iterative(abs(lcg_rand()) % 9);
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
