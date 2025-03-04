@@ -2,7 +2,9 @@ import argparse
 import time
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
+from collections import defaultdict
 from functools import partial
+from typing import Any, Callable
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -22,6 +24,9 @@ class Benchmarks(Enum):
     # Good old normal sort for numba 0?
     LLMSORT = 1
     CRYPTO = 2
+    # MISC = 3  -> Misc is not meant to be visualized with this script.
+    SORT_V2 = 4
+
 
 # State numbers and state titles are tied to each other based on their indices, so the order matters here!
 STATE_NUMBERS: dict[Boards, list[int]] = {
@@ -30,7 +35,8 @@ STATE_NUMBERS: dict[Boards, list[int]] = {
 }
 STATE_TITLES: dict[Benchmarks, list[str]] = {
     Benchmarks.LLMSORT: ["Done", "Other", "gpt_bubble", "cld_bubble", "gem_bubble", "gpt_insert", "cld_insert", "gem_insert", "gpt_merge", "cld_merge", "gem_merge", "gpt_quick", "cld_quick", "gem_quick", "gpt_heap", "cld_heap", "gem_heap", "gpt_gnome", "cld_gnome", "gem_gnome", "gpt_radix", "cld_radix", "gem_radix", "gpt_shell", "cld_shell", "gem_shell", "gpt_comb", "cld_comb", "gem_comb", "gpt_pancake", "cld_pancake", "gem_pancake"],
-    Benchmarks.CRYPTO: ["Done", "Other", "chacha8", "chacha12", "chacha20", "aes128", "aes192", "aes256", "chacha20poly1305", "aes128-gcm", "aes192-gcm", "aes256-gcm", "acorn128", "ascon128"]
+    Benchmarks.CRYPTO: ["Done", "Other", "chacha8", "chacha12", "chacha20", "aes128", "aes192", "aes256", "chacha20poly1305", "aes128-gcm", "aes192-gcm", "aes256-gcm", "acorn128", "ascon128"],
+    Benchmarks.SORT_V2: ["Done", "Other", "bubblesort", "insertionsort", "mergesort", "quicksort", "heapsort", "gnomesort", "radixsort", "shellsort", "combsort", "pancakesort"],
 }
 
 @contextmanager
@@ -50,7 +56,7 @@ def load_data(file: str) -> pd.DataFrame:
     return pd.read_csv(file, usecols=COLS.keys(), dtype=COLS, converters={"D0-D7": lambda s: index_mappings[np.uint8(int(s, 2))]}) # type: ignore
 
 
-def process_data(data: pd.DataFrame, benchmark_type: Benchmarks) -> tuple[pd.Series, pd.Series, pd.Series]:
+def process_data_default(data: pd.DataFrame, benchmark_type: Benchmarks) -> tuple[pd.Series, pd.Series, pd.Series]:
     # maps indices to titles
     benchmark_mappings = dict(zip(range(256), STATE_TITLES[benchmark_type])) # why didn't I use enumerate() here? whatevs, it's almost 4 AM
 
@@ -67,6 +73,75 @@ def process_data(data: pd.DataFrame, benchmark_type: Benchmarks) -> tuple[pd.Ser
     efficiency = (total_usages / timings).rename(index=benchmark_mappings)
 
     return total_usages, timings, efficiency
+
+
+def process_data_sort_v2(data: pd.DataFrame, benchmark_type: Benchmarks) -> pd.Series:
+    level_group = data.loc[~data["D0-D7"].isin((0, 1))].groupby("D0-D7")
+    benchmark_mappings = dict(enumerate(STATE_TITLES[benchmark_type]))
+    total_usages = level_group["Current(uA)"].agg("sum").rename(index=benchmark_mappings) * 5 / 1_000_000 / 100_000 / 3600
+
+    return total_usages
+
+
+def plot_default(files: list[str], processed_datas: list[tuple[pd.Series, pd.Series, pd.Series]]) -> None:
+    fig, axs = plt.subplots(nrows=3, ncols=len(args.files), squeeze=False, sharex="all", sharey="row")
+
+    for (column, file), processed_data in zip(enumerate(files), processed_datas):
+        total_usages, timings, efficiency = processed_data
+
+        print(f"######### {file} #########")
+        datas[column].info()
+        print("===== ENERGY USAGES =====")
+        print(total_usages.sort_values())
+        print("===== TIMINGS =====")
+        print(timings.sort_values())
+        print("===== ENERGY EFFICIENCY =====")
+        print(efficiency.sort_values())
+
+        consumption_plot = sns.barplot(x=total_usages.index.rename("States"), y=total_usages.rename("Watt-hours"), hue=hue(total_usages.rename("Watt-hours"), args.hue), ax=axs[0, column])
+        consumption_plot.set_ylim(0, 0.1 * 10 ** -5)
+        consumption_plot.set_title(f"Total Energy Consumption - {file}")
+        consumption_plot.tick_params(axis='x', rotation=75)
+
+        time_plot = sns.barplot(x=timings.index.rename("States"), y=timings.rename("Microseconds"), hue=hue(timings.rename("Microseconds"), args.hue), ax=axs[1, column])
+        time_plot.set_ylim(0, 30)
+        time_plot.set_title(f"Total Time Spent - {file}")
+        time_plot.tick_params(axis='x', rotation=75)
+
+        efficiency_plot = sns.barplot(x=efficiency.index.rename("States"), y=efficiency.rename("Watt-hour per ms"), hue=hue(efficiency.rename("Watt-hour per ms"), args.hue), ax=axs[2, column])
+        efficiency_plot.set_title(f"Efficiency - {file}")
+        efficiency_plot.tick_params(axis='x', rotation=75)
+
+
+def plot_sort_v2(files: list[str], processed_datas: list[pd.Series]) -> None:
+    tagged_data: dict[str, list[tuple[int, float]]] = defaultdict(list)
+
+    for file, data in zip(files, processed_datas):
+        n = int(file.split("-")[4])
+
+        for state, total in data.items():
+            tagged_data[state].append((n, total))
+
+    fig, axs = plt.subplots(nrows=1, ncols=len(tagged_data), squeeze=False)
+    for col, (state, data) in enumerate(tagged_data.items()):
+        x = list(map(lambda d: d[0], data))
+        y = list(map(lambda d: d[1], data))
+        plot = sns.lineplot(x=x, y=y, ax=axs[0, col])
+        plot.set_title(f"State - {state}")
+
+
+PROCESS_FN_MAP: dict[Benchmarks, Callable[[pd.DataFrame, Benchmarks], Any]] = {
+    Benchmarks.CRYPTO: process_data_default,
+    Benchmarks.LLMSORT: process_data_default,
+    Benchmarks.SORT_V2: process_data_sort_v2,
+}
+
+
+PLOT_FN_MAP: dict[Benchmarks, Callable[[list[str], Any], None]] = {
+    Benchmarks.CRYPTO: process_data_default,
+    Benchmarks.LLMSORT: process_data_default,
+    Benchmarks.SORT_V2: plot_sort_v2,
+}
 
 
 def hue(data: pd.Series, hue_mode: str) -> pd.Series | pd.Index | None:
@@ -88,48 +163,40 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument('files', action='extend', nargs='+')
     parser.add_argument('--hue', default="y")
+    parser.add_argument('--benchmark-type', default="auto")
     args = parser.parse_args()
 
-    # assuming the files are from the same benchmark type
-    benchmark_type = Benchmarks.LLMSORT if "llmsort" in args.files[0] else Benchmarks.CRYPTO
+    benchmark_type: Benchmarks = Benchmarks.LLMSORT
+
+    if args.benchmark_type == "auto":
+        try:
+            benchmark_type = next(filter(
+                lambda typ: re.search(f"\b{typ.name}\b", args.files[0]),
+                Benchmarks
+            ))
+
+            print(f"INFO: Detected benchmark type {benchmark_type.name}")
+        except StopIteration:
+            print("ERROR: Could not detect benchmark type. Please use --benchmark-type.")
+            exit(1)
+    else:
+        try:
+            benchmark_type = getattr(Benchmarks, args.benchmark_type.upper())
+        except TypeError:
+            print(f"ERROR: Invalid benchmark type {args.benchmark_type}, valid options are:")
+            for benchmark_type in Benchmarks:
+                print(f"- {benchmark_type.name}")
 
     with ThreadPoolExecutor() as executor:
         with benchmark("Load CSV"):
             datas.extend(executor.map(load_data, args.files))
 
         with benchmark("Process data"):
-            processed_datas.extend(executor.map(partial(process_data, benchmark_type=benchmark_type), datas))
+            processed_datas.extend(executor.map(partial(PROCESS_FN_MAP[benchmark_type], benchmark_type=benchmark_type), datas))
 
     with benchmark("Plot"):
-        fig, axs = plt.subplots(nrows=3, ncols=len(args.files), squeeze=False, sharex="all", sharey="row")
+        PLOT_FN_MAP[benchmark_type](args.files, processed_datas)
 
-        for (column, file), processed_data in zip(enumerate(args.files), processed_datas):
-            total_usages, timings, efficiency = processed_data
-
-            print("######### {file} #########")
-            datas[column].info()
-            print("===== ENERGY USAGES =====")
-            print(total_usages.sort_values())
-            print("===== TIMINGS =====")
-            print(timings.sort_values())
-            print("===== ENERGY EFFICIENCY =====")
-            print(efficiency.sort_values())
-
-            consumption_plot = sns.barplot(x=total_usages.index.rename("States"), y=total_usages.rename("Watt-hours"), hue=hue(total_usages.rename("Watt-hours"), args.hue), ax=axs[0, column])
-            consumption_plot.set_ylim(0, 0.1 * 10 ** -5)
-            consumption_plot.set_title(f"Total Energy Consumption - {file}")
-            consumption_plot.tick_params(axis='x', rotation=75)
-
-            time_plot = sns.barplot(x=timings.index.rename("States"), y=timings.rename("Microseconds"), hue=hue(timings.rename("Microseconds"), args.hue), ax=axs[1, column])
-            time_plot.set_ylim(0, 30)
-            time_plot.set_title(f"Total Time Spent - {file}")
-            time_plot.tick_params(axis='x', rotation=75)
-
-            efficiency_plot = sns.barplot(x=efficiency.index.rename("States"), y=efficiency.rename("Watt-hour per ms"), hue=hue(efficiency.rename("Watt-hour per ms"), args.hue), ax=axs[2, column])
-            efficiency_plot.set_title(f"Efficiency - {file}")
-            efficiency_plot.tick_params(axis='x', rotation=75)
-
-    print("batashow")
     plt.show()
 
 
