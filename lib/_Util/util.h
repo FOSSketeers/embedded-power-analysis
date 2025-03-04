@@ -4,8 +4,24 @@
 #include <Arduino.h>
 #include <stdint.h>
 
-#ifndef SERIAL_OUTPUT
-#define SERIAL_OUTPUT 0
+#ifndef DEBUG_MODE
+    #define DEBUG_MODE 0
+#endif
+
+#if DEBUG_MODE == 1
+    #define ALGORITHM_CORRECTNESS_VERIFICATION 1
+    #define EXPERIMENT_DELAY 1000
+    #define ALGORITHM_DELAY 500
+    #define SERIAL_OUTPUT 1
+#else
+    #define ALGORITHM_CORRECTNESS_VERIFICATION 0
+    #define EXPERIMENT_DELAY 100
+    #define ALGORITHM_DELAY 50
+    #define SERIAL_OUTPUT 0
+#endif
+
+#ifndef EXPERIMENT_REPETITION
+    #define EXPERIMENT_REPETITION 3
 #endif
 
 void _CommonInitializer() {

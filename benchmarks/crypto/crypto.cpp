@@ -10,11 +10,7 @@
 #include <ChaChaPoly.h>
 #include <GCM.h>
 
-const bool CHECK_CORRECTNESS = false;
-static_assert(!CHECK_CORRECTNESS || SERIAL_OUTPUT, "Correctness check is meaningless without serial output.");
-const int EXPERIMENT_REPETITION = 3;
-const int EXPERIMENT_DELAY = 1000;
-const int ALGORITHM_DELAY = 500;
+static_assert(!ALGORITHM_CORRECTNESS_VERIFICATION || SERIAL_OUTPUT, "Correctness check is meaningless without serial output.");
 
 const uint8_t message[32] = "Lorem ipsum dolor sit amet, con";                                                                                                                                                                  // -1 for NUL terminator
 const uint8_t key128[16] = { 0xac, 0x9f, 0xc8, 0x33, 0xc9, 0x6e, 0x73, 0x47, 0xf2, 0xb1, 0xda, 0xe8, 0x32, 0xae, 0x54, 0x79 };                                                                                                  // first 16 bytes of sha256("symmetric")
@@ -47,7 +43,7 @@ void runBenchmark() {
         chacha8d.setIV(iv64, util::size(iv64));
         chacha8d.decrypt(dec_buffer, enc_buffer, util::size(message));
 
-        if constexpr (CHECK_CORRECTNESS) {
+        if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
                 Serial.println("ERROR: ChaCha8 failed correctness test!");
             }
@@ -69,7 +65,7 @@ void runBenchmark() {
         chacha12d.setIV(iv64, util::size(iv64));
         chacha12d.decrypt(dec_buffer, enc_buffer, util::size(message));
 
-        if constexpr (CHECK_CORRECTNESS) {
+        if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
                 Serial.println("ERROR: ChaCha12 failed correctness test!");
             }
@@ -91,7 +87,7 @@ void runBenchmark() {
         chacha20d.setIV(iv96, util::size(iv96));
         chacha20d.decrypt(dec_buffer, enc_buffer, util::size(message));
 
-        if constexpr (CHECK_CORRECTNESS) {
+        if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
                 Serial.println("ERROR: ChaCha20 failed correctness test!");
             }
@@ -113,7 +109,7 @@ void runBenchmark() {
         aes128d.setKey(key128, util::size(key128));
         aes128d.decryptBlock(dec_buffer, enc_buffer);
 
-        if constexpr (CHECK_CORRECTNESS) {
+        if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
                 Serial.println("ERROR: AES128 failed correctness test!");
             }
@@ -133,7 +129,7 @@ void runBenchmark() {
         aes192d.setKey(key192, util::size(key192));
         aes192d.decryptBlock(dec_buffer, enc_buffer);
 
-        if constexpr (CHECK_CORRECTNESS) {
+        if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
                 Serial.println("ERROR: AES192 failed correctness test!");
             }
@@ -153,7 +149,7 @@ void runBenchmark() {
         aes256d.setKey(key256, util::size(key256));
         aes256d.decryptBlock(dec_buffer, enc_buffer);
 
-        if constexpr (CHECK_CORRECTNESS) {
+        if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
                 Serial.println("ERROR: AES256 failed correctness test!");
             }
@@ -180,7 +176,7 @@ void runBenchmark() {
         chachapolyd.setIV(iv96, util::size(iv96));
         chachapolyd.decrypt(dec_buffer, enc_buffer, util::size(message));
 
-        if constexpr (CHECK_CORRECTNESS) {
+        if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
                 Serial.println("ERROR: ChaCha20Poly1305 encryption failed correctness test!");
             }
@@ -209,7 +205,7 @@ void runBenchmark() {
         gcmd.setIV(iv128, util::size(iv128));
         gcmd.decrypt(dec_buffer, enc_buffer, util::size(message));
 
-        if constexpr (CHECK_CORRECTNESS) {
+        if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
                 Serial.println("ERROR: AES128-GCM encryption failed correctness test!");
             }
@@ -236,7 +232,7 @@ void runBenchmark() {
         gcmd.setIV(iv128, util::size(iv128));
         gcmd.decrypt(dec_buffer, enc_buffer, util::size(message));
 
-        if constexpr (CHECK_CORRECTNESS) {
+        if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
                 Serial.println("ERROR: AES192-GCM encryption failed correctness test!");
             }
@@ -263,7 +259,7 @@ void runBenchmark() {
         gcmd.setIV(iv128, util::size(iv128));
         gcmd.decrypt(dec_buffer, enc_buffer, util::size(message));
 
-        if constexpr (CHECK_CORRECTNESS) {
+        if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
                 Serial.println("ERROR: AES256-GCM encryption failed correctness test!");
             }
@@ -292,7 +288,7 @@ void runBenchmark() {
         acorn128d.setIV(iv128, util::size(iv128));
         acorn128d.decrypt(dec_buffer, enc_buffer, util::size(message));
 
-        if constexpr (CHECK_CORRECTNESS) {
+        if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
                 Serial.println("ERROR: Acorn128 encryption failed correctness test!");
             }
@@ -321,7 +317,7 @@ void runBenchmark() {
         ascon128d.setIV(iv128, util::size(iv128));
         ascon128d.decrypt(dec_buffer, enc_buffer, util::size(message));
 
-        if constexpr (CHECK_CORRECTNESS) {
+        if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
                 Serial.println("ERROR: Ascon128 encryption failed correctness test!");
             }
