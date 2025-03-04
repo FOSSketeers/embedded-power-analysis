@@ -1,16 +1,10 @@
 #include <Arduino.h>
 
-#define SERIAL_OUTPUT 0
 #include <util.h>
 
 #include "chatgpt-sort.h"
 #include "claude-sort.h"
 #include "gemini-sort.h"
-
-const int EXPERIMENT_REPETITION = 3;
-const int EXPERIMENT_DELAY = 1000;
-const int ALGORITHM_DELAY = 500;
-const bool SORT_VERIFICATION = false;
 
 // Taken from random_array_generator.py
 float arr[50] = { 163.6878, 112.6001, 175.2774, 125.31, 293.3901, 112.6832, 156.8216, 294.4022, 264.0788, 104.7658, 83.5962, 209.8616, 247.1789, 136.51, 170.0135, 79.0686, 69.5217, 10.6769, 253.0693, 260.8782, 59.7145, 279.2076, 43.7665, 16.6772, 62.031, 211.596, 1.133, 256.1421, 109.6358, 181.0396, 261.5525, 287.6471, 271.5066, 52.3747, 271.8062, 133.0973, 120.1442, 202.4112, 16.5093, 63.639, 163.8315, 162.9567, 174.0054, 196.9813, 274.6218, 157.443, 37.2125, 276.0246, 169.1158, 98.862 };
@@ -56,7 +50,7 @@ void runBenchmark() {
     setState(1, "chatgpt_bubblesort");
     ChatGPT::bubbleSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -64,7 +58,7 @@ void runBenchmark() {
     setState(2, "claude_bubblesort");
     Claude::bubbleSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -72,7 +66,7 @@ void runBenchmark() {
     setState(3, "gemini_bubblesort");
     Gemini::bubbleSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -80,7 +74,7 @@ void runBenchmark() {
     setState(4, "chatgpt_insertionsort");
     ChatGPT::insertionSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -88,7 +82,7 @@ void runBenchmark() {
     setState(5, "claude_insertionsort");
     Claude::insertionSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -96,7 +90,7 @@ void runBenchmark() {
     setState(6, "gemini_insertionsort");
     Gemini::insertionSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -104,7 +98,7 @@ void runBenchmark() {
     setState(7, "chatgpt_mergesort");
     ChatGPT::mergeSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -112,7 +106,7 @@ void runBenchmark() {
     setState(8, "claude_mergesort");
     Claude::mergeSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -120,7 +114,7 @@ void runBenchmark() {
     setState(9, "gemini_mergesort");
     Gemini::mergeSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -128,7 +122,7 @@ void runBenchmark() {
     setState(10, "chatgpt_quicksort");
     ChatGPT::quickSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -136,7 +130,7 @@ void runBenchmark() {
     setState(11, "claude_quicksort");
     Claude::quickSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -144,7 +138,7 @@ void runBenchmark() {
     setState(12, "gemini_quicksort");
     Gemini::quickSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -152,7 +146,7 @@ void runBenchmark() {
     setState(13, "chatgpt_heapsort");
     ChatGPT::heapSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -160,7 +154,7 @@ void runBenchmark() {
     setState(14, "claude_heapsort");
     Claude::heapSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -168,7 +162,7 @@ void runBenchmark() {
     setState(15, "gemini_heapsort");
     Gemini::heapSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -176,7 +170,7 @@ void runBenchmark() {
     setState(16, "chatgpt_gnomesort");
     ChatGPT::gnomeSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -184,7 +178,7 @@ void runBenchmark() {
     setState(17, "claude_gnomesort");
     Claude::gnomeSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -192,7 +186,7 @@ void runBenchmark() {
     setState(18, "gemini_gnomesort");
     Gemini::gnomeSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -200,7 +194,7 @@ void runBenchmark() {
     setState(19, "chatgpt_radixsort");
     ChatGPT::radixSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -208,7 +202,7 @@ void runBenchmark() {
     setState(20, "claude_radixsort");
     Claude::radixSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -216,7 +210,7 @@ void runBenchmark() {
     setState(21, "gemini_radixsort");
     Gemini::radixSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -224,7 +218,7 @@ void runBenchmark() {
     setState(22, "chatgpt_shellsort");
     ChatGPT::shellSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -232,7 +226,7 @@ void runBenchmark() {
     setState(23, "claude_shellsort");
     Claude::shellSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -240,7 +234,7 @@ void runBenchmark() {
     setState(24, "gemini_shellsort");
     Gemini::shellSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -248,7 +242,7 @@ void runBenchmark() {
     setState(25, "chatgpt_combsort");
     ChatGPT::combSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -256,7 +250,7 @@ void runBenchmark() {
     setState(26, "claude_combsort");
     Claude::combSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -264,7 +258,7 @@ void runBenchmark() {
     setState(27, "gemini_combsort");
     Gemini::combSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -272,7 +266,7 @@ void runBenchmark() {
     setState(28, "chatgpt_pancakesort");
     ChatGPT::pancakeSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -280,7 +274,7 @@ void runBenchmark() {
     setState(29, "claude_pancakesort");
     Claude::pancakeSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
@@ -288,7 +282,7 @@ void runBenchmark() {
     setState(30, "gemini_pancakesort");
     Gemini::pancakeSort(arr_copy, arr_length);
     setState(0, "idle");
-    if (SORT_VERIFICATION)
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION)
         verifySorting(arr_copy);
     delay(ALGORITHM_DELAY);
 
