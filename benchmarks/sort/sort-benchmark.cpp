@@ -12,9 +12,9 @@ const int ALGORITHM_DELAY = 500;
 const bool SORT_VERIFICATION = false;
 
 // Taken from random_array_generator.py
-arr_t arr[16] = { -22087, -32393, -9116, 5627, -78, -29308, -18889, -23338, -15166, -30713, -22488, 13441, -28021, -5148, -29852, 18420 };
+arr_t arr[32] = { -13511, 3220, 23688, -27361, 27087, -9802, 24198, 9277, 21200, -9169, 1074, -30545, -23456, 25804, 8332, -27582, 30100, -15475, 985, 7380, -24233, -15576, 18276, -27622, 29100, 11319, -3888, -24721, 28343, -31743, 10412, 8739 };
 int arr_length = sizeof(arr) / sizeof(arr[0]);
-arr_t arr_copy[16];
+arr_t arr_copy[32];
 
 void initializeArray() {
     for (int i = 0; i < arr_length; i++) {
