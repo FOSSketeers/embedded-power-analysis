@@ -1,4 +1,5 @@
 import argparse
+import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
@@ -83,14 +84,13 @@ def process_data_sort_v2(data: pd.DataFrame, benchmark_type: Benchmarks) -> pd.S
     return total_usages
 
 
-def plot_default(files: list[str], processed_datas: list[tuple[pd.Series, pd.Series, pd.Series]]) -> None:
-    fig, axs = plt.subplots(nrows=3, ncols=len(args.files), squeeze=False, sharex="all", sharey="row")
+def plot_default(files: list[str], processed_datas: list[tuple[pd.Series, pd.Series, pd.Series]], hue_mode: str) -> None:
+    fig, axs = plt.subplots(nrows=3, ncols=len(files), squeeze=False, sharex="all", sharey="row")
 
     for (column, file), processed_data in zip(enumerate(files), processed_datas):
         total_usages, timings, efficiency = processed_data
 
         print(f"######### {file} #########")
-        datas[column].info()
         print("===== ENERGY USAGES =====")
         print(total_usages.sort_values())
         print("===== TIMINGS =====")
@@ -98,22 +98,22 @@ def plot_default(files: list[str], processed_datas: list[tuple[pd.Series, pd.Ser
         print("===== ENERGY EFFICIENCY =====")
         print(efficiency.sort_values())
 
-        consumption_plot = sns.barplot(x=total_usages.index.rename("States"), y=total_usages.rename("Watt-hours"), hue=hue(total_usages.rename("Watt-hours"), args.hue), ax=axs[0, column])
+        consumption_plot = sns.barplot(x=total_usages.index.rename("States"), y=total_usages.rename("Watt-hours"), hue=hue(total_usages.rename("Watt-hours"), hue_mode), ax=axs[0, column])
         consumption_plot.set_ylim(0, 0.1 * 10 ** -5)
         consumption_plot.set_title(f"Total Energy Consumption - {file}")
         consumption_plot.tick_params(axis='x', rotation=75)
 
-        time_plot = sns.barplot(x=timings.index.rename("States"), y=timings.rename("Microseconds"), hue=hue(timings.rename("Microseconds"), args.hue), ax=axs[1, column])
+        time_plot = sns.barplot(x=timings.index.rename("States"), y=timings.rename("Microseconds"), hue=hue(timings.rename("Microseconds"), hue_mode), ax=axs[1, column])
         time_plot.set_ylim(0, 30)
         time_plot.set_title(f"Total Time Spent - {file}")
         time_plot.tick_params(axis='x', rotation=75)
 
-        efficiency_plot = sns.barplot(x=efficiency.index.rename("States"), y=efficiency.rename("Watt-hour per ms"), hue=hue(efficiency.rename("Watt-hour per ms"), args.hue), ax=axs[2, column])
+        efficiency_plot = sns.barplot(x=efficiency.index.rename("States"), y=efficiency.rename("Watt-hour per ms"), hue=hue(efficiency.rename("Watt-hour per ms"), hue_mode), ax=axs[2, column])
         efficiency_plot.set_title(f"Efficiency - {file}")
         efficiency_plot.tick_params(axis='x', rotation=75)
 
 
-def plot_sort_v2(files: list[str], processed_datas: list[pd.Series]) -> None:
+def plot_sort_v2(files: list[str], processed_datas: list[pd.Series], hue_mode: str) -> None:
     tagged_data: dict[str, list[tuple[int, float]]] = defaultdict(list)
 
     for file, data in zip(files, processed_datas):
@@ -138,8 +138,8 @@ PROCESS_FN_MAP: dict[Benchmarks, Callable[[pd.DataFrame, Benchmarks], Any]] = {
 
 
 PLOT_FN_MAP: dict[Benchmarks, Callable[[list[str], Any], None]] = {
-    Benchmarks.CRYPTO: process_data_default,
-    Benchmarks.LLMSORT: process_data_default,
+    Benchmarks.CRYPTO: plot_default,
+    Benchmarks.LLMSORT: plot_default,
     Benchmarks.SORT_V2: plot_sort_v2,
 }
 
@@ -171,7 +171,7 @@ def main() -> None:
     if args.benchmark_type == "auto":
         try:
             benchmark_type = next(filter(
-                lambda typ: re.search(f"\b{typ.name}\b", args.files[0]),
+                lambda typ: re.search(fr"\b{typ.name.lower()}\b", args.files[0]),
                 Benchmarks
             ))
 
@@ -195,7 +195,7 @@ def main() -> None:
             processed_datas.extend(executor.map(partial(PROCESS_FN_MAP[benchmark_type], benchmark_type=benchmark_type), datas))
 
     with benchmark("Plot"):
-        PLOT_FN_MAP[benchmark_type](args.files, processed_datas)
+        PLOT_FN_MAP[benchmark_type](args.files, processed_datas, args.hue)
 
     plt.show()
 
