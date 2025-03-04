@@ -6,15 +6,17 @@ MEASUREMENTS_DIR = measurements
 
 # Find all CSV files in the dist directory
 CSV_FILES = $(wildcard $(DIST_DIR)/*.csv)
+TARGET_XZ_FILES = $(CSV_FILES:$(DIST_DIR)/%.csv=$(MEASUREMENTS_DIR)/%.csv.xz)
 
 # Convert CSV files to .xz files
-XZ_FILES = $(CSV_FILES:$(DIST_DIR)/%.csv=$(MEASUREMENTS_DIR)/%.csv.xz)
+XZ_FILES = $(wildcard $(MEASUREMENTS_DIR)/*.csv.xz)
+TARGET_CSV_FILES = $(XZ_FILES:$(MEASUREMENTS_DIR)/%.csv.xz=$(DIST_DIR)/%.csv)
 
 # Default target
 .PHONY: all compress decompress clean
 
 # Compress the CSV files into .xz format (only if not already compressed or outdated)
-compress: $(XZ_FILES)
+compress: $(TARGET_XZ_FILES)
 
 # Rule for creating .xz files from .csv files
 $(MEASUREMENTS_DIR)/%.csv.xz: $(DIST_DIR)/%.csv
@@ -22,7 +24,7 @@ $(MEASUREMENTS_DIR)/%.csv.xz: $(DIST_DIR)/%.csv
 	xz -z -k -T0 $< -c > $@
 
 # Decompress the .xz files back to CSV format (only if not already decompressed or outdated)
-decompress: $(CSV_FILES)
+decompress: $(TARGET_CSV_FILES)
 
 # Rule for decompressing .xz files back to .csv
 $(DIST_DIR)/%.csv: $(MEASUREMENTS_DIR)/%.csv.xz
