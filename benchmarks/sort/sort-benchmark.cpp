@@ -20,8 +20,7 @@ void initializeArray() {
 bool verifySorting(arr_t arr[]) {
     for (int i = 0; i < arr_length - 1; i++) {
         if (arr[i] > arr[i + 1]) {
-            if constexpr (SERIAL_OUTPUT)
-                Serial.println("VERIF_FAIL: Array is not sorted!");
+            panic("VERIF_FAIL: Array is not sorted!");
             return false;
         }
     }

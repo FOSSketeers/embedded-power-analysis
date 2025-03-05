@@ -29,12 +29,7 @@ void printArray(float arr[]) {
 bool verifySorting(float arr[]) {
     for (int i = 0; i < arr_length - 1; i++) {
         if (arr[i] > arr[i + 1]) {
-            if constexpr (SERIAL_OUTPUT) {
-                Serial.println("VERIF_FAIL: Array is not sorted!");
-                Serial.println(arr[i]);
-                Serial.println(i);
-                printArray(arr);
-            }
+            panic("VERIF_FAIL: Array is not sorted!");
             return false;
         }
     }

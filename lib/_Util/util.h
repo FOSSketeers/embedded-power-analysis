@@ -101,4 +101,18 @@ T* end(T (&array)[N]) {
 }
 }
 
+void panic(const char* msg) {
+    if constexpr (SERIAL_OUTPUT) {
+        Serial.println("VERIFICATION FAILED!");
+        Serial.println(msg);
+    }
+
+    while (true) {
+        digitalWrite(LED_BUILTIN, 0);
+        delay(500);
+        digitalWrite(LED_BUILTIN, 1);
+        delay(500);
+    }
+}
+
 #endif  // _UTIL_UTIL_H

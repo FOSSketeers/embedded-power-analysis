@@ -45,7 +45,7 @@ void runBenchmark() {
 
         if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
-                Serial.println("ERROR: ChaCha8 failed correctness test!");
+                panic("ERROR: ChaCha8 failed correctness test!");
             }
         }
     }
@@ -67,7 +67,7 @@ void runBenchmark() {
 
         if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
-                Serial.println("ERROR: ChaCha12 failed correctness test!");
+                panic("ERROR: ChaCha12 failed correctness test!");
             }
         }
     }
@@ -89,7 +89,7 @@ void runBenchmark() {
 
         if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
-                Serial.println("ERROR: ChaCha20 failed correctness test!");
+                panic("ERROR: ChaCha20 failed correctness test!");
             }
         }
     }
@@ -111,7 +111,7 @@ void runBenchmark() {
 
         if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
-                Serial.println("ERROR: AES128 failed correctness test!");
+                panic("ERROR: AES128 failed correctness test!");
             }
         }
     }
@@ -131,7 +131,7 @@ void runBenchmark() {
 
         if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
-                Serial.println("ERROR: AES192 failed correctness test!");
+                panic("ERROR: AES192 failed correctness test!");
             }
         }
     }
@@ -151,7 +151,7 @@ void runBenchmark() {
 
         if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
-                Serial.println("ERROR: AES256 failed correctness test!");
+                panic("ERROR: AES256 failed correctness test!");
             }
         }
     }
@@ -178,11 +178,11 @@ void runBenchmark() {
 
         if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
-                Serial.println("ERROR: ChaCha20Poly1305 encryption failed correctness test!");
+                panic("ERROR: ChaCha20Poly1305 encryption failed correctness test!");
             }
 
             if (!chachapolyd.checkTag(tag_buffer, util::size(tag_buffer))) {
-                Serial.println("ERROR: ChaCha20Poly1305 tag failed correctness test!");
+                panic("ERROR: ChaCha20Poly1305 tag failed correctness test!");
             }
         }
     }
@@ -207,11 +207,11 @@ void runBenchmark() {
 
         if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
-                Serial.println("ERROR: AES128-GCM encryption failed correctness test!");
+                panic("ERROR: AES128-GCM encryption failed correctness test!");
             }
 
             if (!gcmd.checkTag(tag_buffer, util::size(tag_buffer))) {
-                Serial.println("ERROR: AES128-GCM tag failed correctness test!");
+                panic("ERROR: AES128-GCM tag failed correctness test!");
             }
         }
     }
@@ -234,11 +234,11 @@ void runBenchmark() {
 
         if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
-                Serial.println("ERROR: AES192-GCM encryption failed correctness test!");
+                panic("ERROR: AES192-GCM encryption failed correctness test!");
             }
 
             if (!gcmd.checkTag(tag_buffer, util::size(tag_buffer))) {
-                Serial.println("ERROR: AES192-GCM tag failed correctness test!");
+                panic("ERROR: AES192-GCM tag failed correctness test!");
             }
         }
     }
@@ -261,11 +261,11 @@ void runBenchmark() {
 
         if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
-                Serial.println("ERROR: AES256-GCM encryption failed correctness test!");
+                panic("ERROR: AES256-GCM encryption failed correctness test!");
             }
 
             if (!gcmd.checkTag(tag_buffer, util::size(tag_buffer))) {
-                Serial.println("ERROR: AES256-GCM tag failed correctness test!");
+                panic("ERROR: AES256-GCM tag failed correctness test!");
             }
         }
     }
@@ -290,11 +290,11 @@ void runBenchmark() {
 
         if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
-                Serial.println("ERROR: Acorn128 encryption failed correctness test!");
+                panic("ERROR: Acorn128 encryption failed correctness test!");
             }
 
             if (!acorn128d.checkTag(tag_buffer, util::size(tag_buffer))) {
-                Serial.println("ERROR: Acorn128 tag failed correctness test!");
+                panic("ERROR: Acorn128 tag failed correctness test!");
             }
         }
     }
@@ -319,11 +319,11 @@ void runBenchmark() {
 
         if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
             if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
-                Serial.println("ERROR: Ascon128 encryption failed correctness test!");
+                panic("ERROR: Ascon128 encryption failed correctness test!");
             }
 
             if (!ascon128d.checkTag(tag_buffer, util::size(tag_buffer))) {
-                Serial.println("ERROR: Ascon128 tag failed correctness test!");
+                panic("ERROR: Ascon128 tag failed correctness test!");
             }
         }
     }
