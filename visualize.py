@@ -1,4 +1,5 @@
 import argparse
+import math
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -124,9 +125,25 @@ def plot_sort_v2(files: list[str], processed_datas: list[pd.Series], hue_mode: s
 
     fig, axs = plt.subplots(nrows=1, ncols=len(tagged_data), squeeze=False)
     for col, (state, data) in enumerate(tagged_data.items()):
-        x = list(map(lambda d: d[0], data))
-        y = list(map(lambda d: d[1], data))
-        plot = sns.lineplot(x=x, y=y, ax=axs[0, col])
+        x = np.array(list(map(lambda d: d[0], data)))
+        y = np.array(list(map(lambda d: d[1], data)))
+
+        O_n2 = x ** 2
+        O_nlogn = x * np.log(x)
+
+        O_n2 = O_n2 * (y[0] / O_n2[0])
+        O_nlogn = O_nlogn * (y[0] / O_nlogn[0])
+
+        df = pd.DataFrame({
+            'x': x,
+            'y': y,
+            'O(n^2)': O_n2,
+            'O(nlogn)': O_nlogn,
+        })
+
+        sns.lineplot(data=df, x='x', y='y', label=state, ax=axs[0, col])
+        sns.lineplot(data=df, x='x',  y='O(n^2)', label="O(n^2)", ax=axs[0, col])
+        plot = sns.lineplot(data=df, x='x', y='O(nlogn)', label="O(nlogn)", ax=axs[0, col])
         plot.set_title(f"State - {state}")
 
 
