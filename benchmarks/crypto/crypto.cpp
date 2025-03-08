@@ -3,12 +3,19 @@
 
 #include <util.h>
 
+#define USE_AES_ACCEL 1
+
 #include <Acorn128.h>
 #include <Ascon128.h>
+#if USE_AES_ACCEL
+#include <r_sce_if.h>
+#else
 #include <AES.h>
+#endif
 #include <ChaCha.h>
 #include <ChaChaPoly.h>
 #include <GCM.h>
+
 
 static_assert(!ALGORITHM_CORRECTNESS_VERIFICATION || SERIAL_OUTPUT, "Correctness check is meaningless without serial output.");
 
@@ -82,6 +89,70 @@ void chacha20() {
 }
 
 
+void aes192() {
+    setState(5, "aes192");
+    AES192 aes192;
+    aes192.setKey(key192, util::size(key192));
+    aes192.encryptBlock(enc_buffer, message);
+
+    AES192 aes192d;
+    aes192d.setKey(key192, util::size(key192));
+    aes192d.decryptBlock(dec_buffer, enc_buffer);
+
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
+        if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
+            panic("ERROR: AES192 failed correctness test!");
+        }
+    }
+}
+
+#if USE_AES_ACCEL
+
+void aes128() {
+    setState(4, "aes128");
+
+    sce_aes_key_index_t key_index;
+    sce_aes_handle_t aes_handle;
+    uint32_t length = 32;
+
+    if (HW_SCE_GenerateAes128RandomKeyIndex(&key_index)) {
+        panic("ERROR: HW_SCE_GenerateAes128RandomKeyIndex failed!");
+    }
+
+    if (HW_SCE_Aes128EcbEncryptInit(&aes_handle, &key_index)) {
+        panic("ERROR: HW_SCE_Aes128EcbEncryptInit failed!");
+    }
+
+    if (HW_SCE_Aes128EcbEncryptUpdate(&aes_handle, message, enc_buffer, 32)) {
+        panic("ERROR: HW_SCE_Aes128EcbEncryptUpdate failed!");
+    }
+
+    if (HW_SCE_Aes128EcbEncryptFinal(&aes_handle, enc_buffer, &length)) {
+        panic("ERROR: HW_SCE_Aes128EcbEncryptFinal failed!");
+    }
+    length = 32;
+
+    if (HW_SCE_Aes128EcbDecryptInit(&aes_handle, &key_index)) {
+        panic("ERROR: HW_SCE_Aes128EcbDecryptInit failed!");
+    }
+
+    if (HW_SCE_Aes128EcbDecryptUpdate(&aes_handle, enc_buffer, dec_buffer, 32)) {
+        panic("ERROR: HW_SCE_Aes128EcbDecryptUpdate failed!");
+    }
+
+    if (HW_SCE_Aes128EcbDecryptFinal(&aes_handle, dec_buffer, &length)) {
+        panic("ERROR: HW_SCE_Aes128EcbDecryptFinal failed!");
+    }
+
+    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
+        if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
+            panic("ERROR: AES192 failed correctness test!");
+        }
+    }
+}
+
+#else
+
 void aes128() {
     setState(4, "aes128");
     AES128 aes128;
@@ -99,22 +170,7 @@ void aes128() {
     }
 }
 
-void aes192() {
-    setState(5, "aes192");
-    AES192 aes192;
-    aes192.setKey(key192, util::size(key192));
-    aes192.encryptBlock(enc_buffer, message);
-
-    AES192 aes192d;
-    aes192d.setKey(key192, util::size(key192));
-    aes192d.decryptBlock(dec_buffer, enc_buffer);
-
-    if constexpr (ALGORITHM_CORRECTNESS_VERIFICATION) {
-        if (!util::equal(util::begin(dec_buffer), util::end(dec_buffer), util::begin(message))) {
-            panic("ERROR: AES192 failed correctness test!");
-        }
-    }
-}
+#endif // #if USE_AES_ACCEL
 
 void aes256() {
     setState(6, "aes256");
