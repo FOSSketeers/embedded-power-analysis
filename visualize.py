@@ -124,10 +124,15 @@ def plot_sort_v2(files: list[str], processed_datas: list[pd.Series], hue_mode: s
         for state, total in data.items():
             tagged_data[state].append((n, total))
 
-    fig, axs = plt.subplots(nrows=1, ncols=len(tagged_data), squeeze=False)
-    for col, (state, data) in enumerate(tagged_data.items()):
+    ncols = int(len(tagged_data) ** 0.5) + 1
+    nrows = len(tagged_data) // ncols + 1
+
+    fig, axs = plt.subplots(nrows=nrows, ncols=ncols, squeeze=True)
+    for axis_idx, (state, data) in enumerate(tagged_data.items()):
         x = np.array(list(map(lambda d: d[0], data)))
         y = np.array(list(map(lambda d: d[1], data)))
+
+        ax_y, ax_x = divmod(axis_idx, ncols)
 
         O_n2 = x ** 2
         O_nlogn = x * np.log(x)
@@ -142,10 +147,11 @@ def plot_sort_v2(files: list[str], processed_datas: list[pd.Series], hue_mode: s
             'O(nlogn)': O_nlogn,
         })
 
-        sns.lineplot(data=df, x='x', y='y', label=state, ax=axs[0, col])
-        sns.lineplot(data=df, x='x',  y='O(n^2)', label="O(n^2)", ax=axs[0, col])
-        plot = sns.lineplot(data=df, x='x', y='O(nlogn)', label="O(nlogn)", ax=axs[0, col])
+        sns.lineplot(data=df, x='x', y='y', label=state, linewidth=3, ax=axs[ax_y, ax_x])
+        sns.lineplot(data=df, x='x',  y='O(n^2)', label="O(n^2)", ax=axs[ax_y, ax_x])
+        plot = sns.lineplot(data=df, x='x', y='O(nlogn)', label="O(nlogn)", ax=axs[ax_y, ax_x])
         plot.set_title(f"State - {state}")
+        plot.set(xlabel=None, ylabel="Total Energy Consumption")
 
 
 PROCESS_FN_MAP: dict[Benchmarks, Callable[[pd.DataFrame, Benchmarks], Any]] = {
