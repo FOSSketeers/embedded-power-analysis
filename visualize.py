@@ -28,6 +28,7 @@ class Benchmarks(Enum):
     CRYPTO = 2
     # MISC = 3  -> Misc is not meant to be visualized with this script.
     SORT_V2 = 4
+    INSTRUCTION = 5
 
 
 # State numbers and state titles are tied to each other based on their indices, so the order matters here!
@@ -40,6 +41,7 @@ STATE_TITLES: dict[Benchmarks, list[str]] = {
     Benchmarks.LLMSORT: ["Done", "Other", "gpt_bubble", "cld_bubble", "gem_bubble", "gpt_insert", "cld_insert", "gem_insert", "gpt_merge", "cld_merge", "gem_merge", "gpt_quick", "cld_quick", "gem_quick", "gpt_heap", "cld_heap", "gem_heap", "gpt_gnome", "cld_gnome", "gem_gnome", "gpt_radix", "cld_radix", "gem_radix", "gpt_shell", "cld_shell", "gem_shell", "gpt_comb", "cld_comb", "gem_comb", "gpt_pancake", "cld_pancake", "gem_pancake"],
     Benchmarks.CRYPTO: ["Done", "Other", "chacha8", "chacha12", "chacha20", "aes128", "aes192", "aes256", "chacha20poly1305", "aes128-gcm", "aes192-gcm", "aes256-gcm", "acorn128", "ascon128"],
     Benchmarks.SORT_V2: ["Done", "Other", "bubblesort", "insertionsort", "mergesort", "quicksort", "heapsort", "gnomesort", "radixsort", "shellsort", "combsort", "pancakesort"],
+    Benchmarks.INSTRUCTION: ["Done", "Other", "nop", "ldi", "mov", "add", "sub", "and", "or", "eor", "inc", "dec", "mul", "lsl", "lsr", "asr", "ror", "neg", "com", "sbrc", "muls", "mulsu", "fmul", "fmuls", "fmulsu", "sts", "std_y+1"]
 }
 
 @contextmanager
@@ -159,6 +161,7 @@ PROCESS_FN_MAP: dict[Benchmarks, Callable[[pd.DataFrame, Benchmarks], Any]] = {
     Benchmarks.CRYPTO: process_data_default,
     Benchmarks.LLMSORT: process_data_default,
     Benchmarks.SORT_V2: process_data_sort_v2,
+    Benchmarks.INSTRUCTION: process_data_default,
 }
 
 
@@ -167,6 +170,7 @@ PLOT_FN_MAP: dict[Benchmarks, Callable[[list[str], Any], None]] = {
     Benchmarks.CRYPTO: plot_default,
     Benchmarks.LLMSORT: plot_default,
     Benchmarks.SORT_V2: plot_sort_v2,
+    Benchmarks.INSTRUCTION: plot_default,
 }
 
 
