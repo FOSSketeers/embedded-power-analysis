@@ -41,8 +41,7 @@ void runBenchmark() {
     // 2. LDI (Load immediate)
     setState(2, "ldi");
     for (int i = 0; i < LOOP_COUNT; i++) {
-
-        asm volatile("ldi r16, 0xFF");
+        asm volatile("ldi r21, 0xFF");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -50,7 +49,7 @@ void runBenchmark() {
     // 3. MOV (Move register to register)
     setState(3, "mov");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("mov r16, r17");
+        asm volatile("mov r21, r22");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -58,7 +57,7 @@ void runBenchmark() {
     // 4. ADD (Add registers)
     setState(4, "add");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("add r16, r17");
+        asm volatile("add r21, r22");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -66,7 +65,7 @@ void runBenchmark() {
     // 5. SUB (Subtract registers)
     setState(5, "sub");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("sub r16, r17");
+        asm volatile("sub r21, r22");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -74,7 +73,7 @@ void runBenchmark() {
     // 6. AND (Bitwise AND)
     setState(6, "and");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("and r16, r17");
+        asm volatile("and r21, r22");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -82,7 +81,7 @@ void runBenchmark() {
     // 7. OR (Bitwise OR)
     setState(7, "or");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("or r16, r17");
+        asm volatile("or r21, r22");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -90,7 +89,7 @@ void runBenchmark() {
     // 8. EOR (Exclusive OR)
     setState(8, "eor");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("eor r16, r17");
+        asm volatile("eor r21, r22");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -98,7 +97,7 @@ void runBenchmark() {
     // 9. INC (Increment)
     setState(9, "inc");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("inc r16");
+        asm volatile("inc r21");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -106,15 +105,15 @@ void runBenchmark() {
     // 10. DEC (Decrement)
     setState(10, "dec");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("dec r16");
+        asm volatile("dec r21");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
 
-    // 11. MUL (Multiply r16 * r17 → result in r0:r1)
+    // 11. MUL (Multiply r21 * r22 → result in r0:r1)
     setState(11, "mul");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("mul r17, r18");
+        asm volatile("mul r22, r18");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -122,7 +121,7 @@ void runBenchmark() {
     // 12. LSL (Logical Shift Left)
     setState(12, "lsl");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("lsl r16");
+        asm volatile("lsl r21");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -130,7 +129,7 @@ void runBenchmark() {
     // 13. LSR (Logical Shift Right)
     setState(13, "lsr");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("lsr r16");
+        asm volatile("lsr r21");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -138,7 +137,7 @@ void runBenchmark() {
     // 14. ROR (Arithmetic Shift Right)
     setState(14, "asr");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("asr r16");
+        asm volatile("asr r21");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -146,7 +145,7 @@ void runBenchmark() {
     // 15. ROR (Rotate Right Through Right)
     setState(15, "ror");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("ror r16");
+        asm volatile("ror r21");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -154,7 +153,7 @@ void runBenchmark() {
     // 16. NEG (Negate two's complement)
     setState(16, "neg");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("neg r16");
+        asm volatile("neg r21");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -162,7 +161,7 @@ void runBenchmark() {
     // 17. COM (One's complement)
     setState(17, "com");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("com r16");
+        asm volatile("com r21");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -171,7 +170,7 @@ void runBenchmark() {
     setState(18, "sbrc");
     for (int i = 0; i < LOOP_COUNT; i++) {
         asm volatile(
-            "sbrc r16, 0\n\t"  // Skip next if bit 0 of r16 is cleared
+            "sbrc r21, 0\n\t"  // Skip next if bit 0 of r21 is cleared
             "nop"
         );
     }
@@ -181,7 +180,7 @@ void runBenchmark() {
     // 19. MULS (Signed × Signed)
     setState(19, "muls");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("muls r16, r17");
+        asm volatile("muls r21, r22");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -189,7 +188,7 @@ void runBenchmark() {
     // 20. MULSU (Signed × Unsigned)
     setState(20, "mulsu");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("mulsu r16, r17");
+        asm volatile("mulsu r21, r22");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -197,7 +196,7 @@ void runBenchmark() {
     // 21. FMUL (Unsigned Fractional ×2)
     setState(21, "fmul");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("fmul r16, r17");
+        asm volatile("fmul r21, r22");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -205,7 +204,7 @@ void runBenchmark() {
     // 22. FMULS (Signed Fractional ×2)
     setState(22, "fmuls");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("fmuls r16, r17");
+        asm volatile("fmuls r21, r22");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -213,7 +212,7 @@ void runBenchmark() {
     // 23. FMULSU (Signed × Unsigned Fractional ×2)
     setState(23, "fmulsu");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("fmulsu r16, r17");
+        asm volatile("fmulsu r21, r22");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -221,7 +220,7 @@ void runBenchmark() {
     // 24. STS (Store direct to SRAM address)
     setState(24, "sts");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("sts 0x0100, r16");
+        asm volatile("sts 0x0100, r21");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
@@ -233,7 +232,7 @@ void runBenchmark() {
     );
     setState(25, "std_y+1");
     for (int i = 0; i < LOOP_COUNT; i++) {
-        asm volatile("std Y+1, r16");
+        asm volatile("std Y+1, r21");
     }
     setState(0, "idle");
     delay(ALGORITHM_DELAY);
