@@ -103,12 +103,10 @@ def plot_default(files: list[str], processed_datas: list[tuple[pd.Series, pd.Ser
         print(efficiency.sort_values())
 
         consumption_plot = sns.barplot(x=total_usages.index.rename("States"), y=total_usages.rename("Watt-hours"), hue=hue(total_usages.rename("Watt-hours"), hue_mode), ax=axs[0, column])
-        consumption_plot.set_ylim(0, 0.1 * 10 ** -5)
         consumption_plot.set_title(f"Total Energy Consumption - {file}")
         consumption_plot.tick_params(axis='x', rotation=75)
 
         time_plot = sns.barplot(x=timings.index.rename("States"), y=timings.rename("Microseconds"), hue=hue(timings.rename("Microseconds"), hue_mode), ax=axs[1, column])
-        time_plot.set_ylim(0, 30)
         time_plot.set_title(f"Total Time Spent - {file}")
         time_plot.tick_params(axis='x', rotation=75)
 
