@@ -122,7 +122,7 @@ def plot_sort_v2(files: list[str], processed_datas: list[pd.Series], hue_mode: s
         n = int(file.split("-")[4])
 
         for state, total in data.items():
-            tagged_data[state].append((n, total))
+            tagged_data[str(state)].append((n, total))
 
     ncols = int(len(tagged_data) ** 0.5) + 1
     nrows = len(tagged_data) // ncols + 1
@@ -154,7 +154,8 @@ def plot_sort_v2(files: list[str], processed_datas: list[pd.Series], hue_mode: s
         plot.set(xlabel=None, ylabel="Total Energy Consumption")
 
 
-PROCESS_FN_MAP: dict[Benchmarks, Callable[[pd.DataFrame, Benchmarks], Any]] = {
+DataProcessorFn = Callable[[pd.DataFrame, Benchmarks], Any]
+PROCESS_FN_MAP: dict[Benchmarks, DataProcessorFn] = {
     Benchmarks.SORT: process_data_default,
     Benchmarks.CRYPTO: process_data_default,
     Benchmarks.LLMSORT: process_data_default,
@@ -163,7 +164,8 @@ PROCESS_FN_MAP: dict[Benchmarks, Callable[[pd.DataFrame, Benchmarks], Any]] = {
 }
 
 
-PLOT_FN_MAP: dict[Benchmarks, Callable[[list[str], Any], None]] = {
+PlotterFn = Callable[[list[str], list, str], None]
+PLOT_FN_MAP: dict[Benchmarks, PlotterFn] = {
     Benchmarks.SORT: plot_default,
     Benchmarks.CRYPTO: plot_default,
     Benchmarks.LLMSORT: plot_default,
@@ -220,7 +222,7 @@ def main() -> None:
             datas.extend(executor.map(load_data, args.files))
 
         with benchmark("Process data"):
-            processed_datas.extend(executor.map(partial(PROCESS_FN_MAP[benchmark_type], benchmark_type=benchmark_type), datas))
+            processed_datas.extend(executor.map(lambda data: PROCESS_FN_MAP[benchmark_type](data, benchmark_type), datas))
 
     with benchmark("Plot"):
         PLOT_FN_MAP[benchmark_type](args.files, processed_datas, args.hue)
