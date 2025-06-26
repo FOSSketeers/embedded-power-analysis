@@ -115,6 +115,7 @@ def plot_default(files: list[str], processed_datas: list[tuple[pd.Series, pd.Ser
         efficiency_plot.tick_params(axis='x', rotation=75)
 
 
+from scipy.stats import pearsonr
 def plot_sort_v2(files: list[str], processed_datas: list[pd.Series], hue_mode: str) -> None:
     tagged_data: dict[str, list[tuple[int, float]]] = defaultdict(list)
 
@@ -127,6 +128,9 @@ def plot_sort_v2(files: list[str], processed_datas: list[pd.Series], hue_mode: s
     ncols = int(len(tagged_data) ** 0.5) + 1
     nrows = len(tagged_data) // ncols + 1
 
+    def pearson_pval(x,y):
+        return pearsonr(x,y)[1]
+
     fig, axs = plt.subplots(nrows=nrows, ncols=ncols, squeeze=True)
     for axis_idx, (state, data) in enumerate(tagged_data.items()):
         x = np.array(list(map(lambda d: d[0], data)))
@@ -134,24 +138,32 @@ def plot_sort_v2(files: list[str], processed_datas: list[pd.Series], hue_mode: s
 
         ax_y, ax_x = divmod(axis_idx, ncols)
 
+        O_n = x
         O_n2 = x ** 2
+        O_logn = np.log(x)
         O_nlogn = x * np.log(x)
-
-        O_n2 = O_n2 * (y[0] / O_n2[0])
-        O_nlogn = O_nlogn * (y[0] / O_nlogn[0])
 
         df = pd.DataFrame({
             'x': x,
-            'y': y,
+            'TEC': y,
+            'O(n)': O_n,
             'O(n^2)': O_n2,
+            'O(logn)': O_logn,
             'O(nlogn)': O_nlogn,
         })
 
-        sns.lineplot(data=df, x='x', y='y', label=state, linewidth=3, ax=axs[ax_y, ax_x])
-        sns.lineplot(data=df, x='x',  y='O(n^2)', label="O(n^2)", ax=axs[ax_y, ax_x])
-        plot = sns.lineplot(data=df, x='x', y='O(nlogn)', label="O(nlogn)", ax=axs[ax_y, ax_x])
+        corr = df.corr().drop(columns=['x', 'TEC'], index=['x', 'O(n)', 'O(n^2)', 'O(logn)', 'O(nlogn)'])
+
+        plot = sns.heatmap(corr, annot=True, cmap='coolwarm', linewidths=0.5, vmin=-1, vmax=1, cbar_kws={'shrink': 0.8}, ax=axs[ax_y, ax_x])
+
+        # plot = sns.lineplot(data=df, x='x', y='y', label=state, linewidth=3, ax=axs[ax_y, ax_x])
+        # sns.lineplot(data=df, x='x',  y='O(n^2)', label="O(n^2)", ax=axs[ax_y, ax_x])
+        # plot = sns.lineplot(data=df, x='x', y='O(nlogn)', label="O(nlogn)", ax=axs[ax_y, ax_x])
         plot.set_title(f"State - {state}")
-        plot.set(xlabel=None, ylabel="Total Energy Consumption")
+        # plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels to 45 degrees
+        # plt.yticks(rotation=0, ha='right')
+        # plt.figure(figsize=(12, 9))
+        # plot.set(xlabel=None, ylabel="Total Energy Consumption")
 
 
 DataProcessorFn = Callable[[pd.DataFrame, Benchmarks], Any]
